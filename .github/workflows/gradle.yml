@@ -47,7 +47,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_TOKEN }}
+        password: ${{ secrets.GHCR_TOKEN2 }}
 
     - name: Build and push Docker image
       run: |
@@ -76,7 +76,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_TOKEN }}
+        password: ${{ secrets.GHCR_TOKEN2 }}
     - name: Pull and run Docker Compose
       run: |
         docker compose pull
