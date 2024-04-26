@@ -26,7 +26,7 @@ class OAuthController(
     ): BaseResponse<KakaoTokenResponse> {
 
         val code = request.code
-        val state = request.state
+        //val state = request.state
 
 
         val accessToken = kakaoLoginService.getKakaoAccessToken(code)

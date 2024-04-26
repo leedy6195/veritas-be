@@ -1,11 +1,11 @@
 spring:
   application:
     name: veritas
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/veritas
-    username: root
-    password: 1313
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://mariadb:3306/veritas
+#    username: root
+#    password: 1313
   jpa:
     hibernate:
       ddl-auto: create
