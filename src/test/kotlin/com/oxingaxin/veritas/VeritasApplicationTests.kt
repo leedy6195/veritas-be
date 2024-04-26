@@ -1,0 +1,13 @@
+package com.oxingaxin.veritas
+
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+
+@SpringBootTest
+class VeritasApplicationTests {
+
+	@Test
+	fun contextLoads() {
+	}
+
+}

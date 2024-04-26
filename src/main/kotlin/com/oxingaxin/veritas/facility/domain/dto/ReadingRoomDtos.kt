@@ -1,0 +1,17 @@
+package com.oxingaxin.veritas.facility.domain.dto
+
+data class ReadingRoomCreateRequest(
+        val name: String,
+        val width: Int,
+        val height: Int,
+)
+
+data class ReadingRoomCreateResponse(
+        val id: Long,
+)
+
+data class ReadingRoomUpdateRequest(
+        val name: String,
+        val width: Int,
+        val height: Int,
+)
