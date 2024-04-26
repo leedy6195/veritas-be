@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: veritas-be
+    image: oxingaxin/veritas-be:latest
     container_name: veritas-be
     build: .
     environment:
@@ -17,7 +17,7 @@ services:
 
   mariadb:
     container_name: veritas-db
-    image: mariadb:latest
+    image: mariadb
     environment:
       MARIADB_ROOT_PASSWORD: 1313
       MARIADB_DATABASE: veritas
