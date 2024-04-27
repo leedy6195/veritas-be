@@ -61,29 +61,24 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/veritas-be . 
         docker push ${{ secrets.DOCKER_USERNAME }}/veritas-be
 
-
     - name: Deploy
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: 223.130.130.160
-        username: root
-        password: H4L8MHab*cm
-        port: 22
-        script: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker rm $(docker ps -a -q)
-          docker rmi ${{ secrets.DOCKER_USERNAME }}/veritas-be
-          docker pull ${{ secrets.DOCKER_USERNAME }}/veritas-be
-          
-          COMPOSE_FILE=$(find / -name "docker-compose.yml" 2>/dev/null)
-          if [ -z "$COMPOSE_FILE" ]; then
-            echo "docker-compose.yml not found"
-            exit 1
-          fi
-          echo $(dirname $COMPOSE_FILE)
-          cd $(dirname $COMPOSE_FILE)
-          
-          docker-compose up -d
+      run: |
+        docker-compose up -d
+
+#    - name: Deploy
+#      uses: appleboy/ssh-action@v1.0.0
+#      with:
+#        host: 223.130.130.160
+#        username: root
+#        password: H4L8MHab*cm
+#        port: 22
+#        script: |
+#          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+#          docker rm $(docker ps -a -q)
+#          docker rmi ${{ secrets.DOCKER_USERNAME }}/veritas-be
+#          docker pull ${{ secrets.DOCKER_USERNAME }}/veritas-be
+#          docker-compose up -d
+
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
