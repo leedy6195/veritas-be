@@ -67,7 +67,7 @@ jobs:
       with:
         host: 223.130.130.160
         username: root
-        key: ${{ secrets.SERVER_KEY }}
+        password: H4L8MHab*cm
         port: 22
         script: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
