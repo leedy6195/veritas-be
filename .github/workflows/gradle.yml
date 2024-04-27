@@ -62,10 +62,18 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/veritas-be
 
     - name: Deploy
-      run: |
-        docker-compose pull
-        docker-compose down
-        docker-compose up -d
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: 223.130.130.160
+        username: root
+        password: H4L8MHab*cm
+        port: 22
+        script: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker rm $(docker ps -a -q)
+          docker rmi ${{ secrets.DOCKER_USERNAME }}/veritas-be
+          docker pull ${{ secrets.DOCKER_USERNAME }}/veritas-be
+          docker-compose up -d
 
 #    - name: Deploy
 #      uses: appleboy/ssh-action@v1.0.0
