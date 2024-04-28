@@ -27,4 +27,7 @@ logging:
 server:
   servlet:
     session:
-      timeout: 1m
+      timeout: 24h
+      cookie:
+        same-site: none
+        secure: true
