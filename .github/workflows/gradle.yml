@@ -38,23 +38,6 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-#    - name: Docker Login
-#      uses: docker/login-action@v2
-#      with:
-#        username: ${{ secrets.DOCKER_USERNAME }}
-#        password: ${{ secrets.DOCKER_TOKEN }}
-
-#    - name: Login to GitHub Container Registry
-#      uses: docker/login-action@v1
-#      with:
-#        registry: ghcr.io
-#        username: ${{ github.actor }}
-#        password: ${{ secrets.GHCR_TOKEN2 }}
-
-#    - name: Build and push Docker image
-#      run: |
-#        docker compose build
-#        docker compose push oxingaxin/veritas-be
     - name: Docker build
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -70,56 +53,9 @@ jobs:
         port: 22
         script: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker rm $(docker ps -a -q)
+          docker stop $(docker ps -aq --filter ancestor=${{ secrets.DOCKER_USERNAME }}/veritas-be)
+          docker rm $(docker ps -aq --filter ancestor=${{ secrets.DOCKER_USERNAME }}/veritas-be)
           docker rmi ${{ secrets.DOCKER_USERNAME }}/veritas-be
           docker pull ${{ secrets.DOCKER_USERNAME }}/veritas-be
           docker-compose up -d
 
-#    - name: Deploy
-#      uses: appleboy/ssh-action@v1.0.0
-#      with:
-#        host: 223.130.130.160
-#        username: root
-#        password: H4L8MHab*cm
-#        port: 22
-#        script: |
-#          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-#          docker rm $(docker ps -a -q)
-#          docker rmi ${{ secrets.DOCKER_USERNAME }}/veritas-be
-#          docker pull ${{ secrets.DOCKER_USERNAME }}/veritas-be
-#          docker-compose up -d
-
-    # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
-    #
-    # - name: Setup Gradle
-    #   uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-    #   with:
-    #     gradle-version: '8.5'
-    #
-    # - name: Build with Gradle 8.5
-    #   run: gradle build
-  
-#  deploy:
-#    needs: build
-#    runs-on: [self-hosted, label-go]
-#
-#    steps:
-
-#    - name: Docker Login
-#      uses: docker/login-action@v2
-#      with:
-#        username: ${{ secrets.DOCKER_USERNAME }}
-#        password: ${{ secrets.DOCKER_TOKEN }}
-#    - name: Login to GitHub Container Registry
-#      uses: docker/login-action@v1
-#      with:
-#        registry: ghcr.io
-#        username: ${{ github.actor }}
-#        password: ${{ secrets.GHCR_TOKEN2 }}
-
-#    - name: Pull and run Docker Compose
-#      run: |
-#        docker compose pull
-#        docker compose down
-#        docker compose up -d
