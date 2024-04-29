@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.oxingaxin.veritas.device.domain.entity.Kiosk
 import com.oxingaxin.veritas.facility.domain.dto.ReadingRoomUpdateRequest
 import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.time.LocalDateTime
 
 @Entity
@@ -25,6 +27,7 @@ class ReadingRoom(
         var seats: List<Seat>? = null,
 
         @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
+        @OnDelete(action = OnDeleteAction.SET_NULL)
         @JsonIgnore
         var kiosks: List<Kiosk>? = null,
 
