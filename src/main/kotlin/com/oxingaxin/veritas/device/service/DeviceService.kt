@@ -81,13 +81,44 @@ class DeviceService(
         entryDeviceRepository.save(entryDevice)
     }
 
+    fun updateEntryDevice(entryDeviceId: Long, entryDeviceUpdateRequest: EntryDeviceUpdateRequest) {
+        val entryDevice = entryDeviceRepository.findById(entryDeviceId).orElseThrow {
+            NotFoundException("출입 디바이스")
+        }
+
+        val parentKiosk = entryDeviceUpdateRequest.parentKioskId?.let {
+            kioskRepository.findById(it).orElseThrow {
+                NotFoundException("연동할 키오스크")
+            }
+        }
+
+        val lectureRoom = entryDeviceUpdateRequest.lectureRoomId?.let {
+            lectureRoomRepository.findById(it).orElseThrow {
+                NotFoundException("강의실")
+            }
+        }
+
+        entryDevice.name = entryDeviceUpdateRequest.name
+        entryDevice.accessType = entryDeviceUpdateRequest.accessType
+        entryDevice.kiosk = parentKiosk
+        entryDevice.lectureRoom = lectureRoom
+    }
+
+    fun deleteEntryDevice(entryDeviceId: Long) {
+        val entryDevice = entryDeviceRepository.findById(entryDeviceId).orElseThrow {
+            NotFoundException("출입 디바이스")
+        }
+        entryDeviceRepository.delete(entryDevice)
+    }
+
     fun findEntryDevices(): List<EntryDeviceResponse> = entryDeviceRepository.findAll().map {
         EntryDeviceResponse(
             id = it.id!!,
             name = it.name,
             accessType = it.accessType,
             parentKioskName = it.kiosk?.name,
-            lectureRoomName = it.lectureRoom?.name
+            lectureRoomName = it.lectureRoom?.name,
+            receiverToken = it.kiosk?.readingRoom?.receiverToken
         )
     }
 
@@ -98,7 +129,8 @@ class DeviceService(
                 name = it.name,
                 accessType = it.accessType,
                 parentKioskName = it.kiosk?.name,
-                lectureRoomName = it.lectureRoom?.name
+                lectureRoomName = it.lectureRoom?.name,
+                receiverToken = it.kiosk?.readingRoom?.receiverToken
             )
         }.orElseThrow { NotFoundException("디바이스 정보") }
 

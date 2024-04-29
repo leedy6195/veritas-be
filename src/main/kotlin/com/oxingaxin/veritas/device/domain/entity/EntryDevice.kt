@@ -13,21 +13,21 @@ class EntryDevice(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
-        val name: String,
+        var name: String,
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "kiosk_id")
         @JsonIgnore
-        val kiosk: Kiosk?,
+        var kiosk: Kiosk?,
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "lecture_room_id")
         @OnDelete(action = OnDeleteAction.SET_NULL)
         @JsonIgnore
-        val lectureRoom: LectureRoom?,
+        var lectureRoom: LectureRoom?,
 
         @Enumerated(EnumType.STRING)
-        val accessType: AccessType,
+        var accessType: AccessType,
 
         private var createdAt: LocalDateTime? = null,
 ) {

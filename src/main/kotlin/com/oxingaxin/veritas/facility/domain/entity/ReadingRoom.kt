@@ -9,8 +9,8 @@ import java.time.LocalDateTime
 @Entity
 class ReadingRoom(
         @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id: Long? = null,
 
         @Column(unique = true)
         var name: String,
@@ -19,12 +19,14 @@ class ReadingRoom(
 
         var height: Int,
 
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
-    var seats: List<Seat>? = null,
+        var receiverToken: String,
 
         @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
-    @JsonIgnore
-    var kiosks: List<Kiosk>? = null,
+        var seats: List<Seat>? = null,
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
+        @JsonIgnore
+        var kiosks: List<Kiosk>? = null,
 
         private var createdAt: LocalDateTime? = null,
 
@@ -47,6 +49,7 @@ class ReadingRoom(
         name = readingRoomUpdateRequest.name
         width = readingRoomUpdateRequest.width
         height = readingRoomUpdateRequest.height
+        receiverToken = readingRoomUpdateRequest.receiverToken
     }
 
 }

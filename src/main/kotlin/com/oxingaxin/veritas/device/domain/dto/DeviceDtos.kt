@@ -24,10 +24,18 @@ data class EntryDeviceCreateRequest(
     val parentKioskId: Long? = null,
 )
 
+data class EntryDeviceUpdateRequest(
+    val name: String,
+    val accessType: AccessType,
+    val lectureRoomId: Long? = null,
+    val parentKioskId: Long? = null,
+)
+
 data class EntryDeviceResponse(
     val id: Long,
     val name: String,
     val accessType: AccessType,
     val parentKioskName: String?,
     val lectureRoomName: String?,
+    val receiverToken: String?,
 )

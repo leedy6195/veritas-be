@@ -21,7 +21,8 @@ class ReadingRoomService(
         val readingRoom = ReadingRoom(
             name = readingRoomCreateRequest.name,
             width = readingRoomCreateRequest.width,
-            height = readingRoomCreateRequest.height
+            height = readingRoomCreateRequest.height,
+            receiverToken = readingRoomCreateRequest.receiverToken
         )
         val saved = readingRoomRepository.save(readingRoom)
         return ReadingRoomCreateResponse(saved.id!!)

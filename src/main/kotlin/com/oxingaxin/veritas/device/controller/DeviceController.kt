@@ -63,4 +63,21 @@ class DeviceController(
         val entryDevice = deviceService.findEntryDevice(deviceId)
         return BaseResponse.ok(entryDevice)
     }
+
+    @PutMapping("/entryDevices/{deviceId}")
+    fun updateEntryDevice(
+            @PathVariable deviceId: Long,
+            @RequestBody entryDeviceUpdateRequest: EntryDeviceUpdateRequest
+    ): BaseResponse<Void> {
+        deviceService.updateEntryDevice(deviceId, entryDeviceUpdateRequest)
+        return BaseResponse.ok()
+    }
+
+    @DeleteMapping("/entryDevices/{deviceId}")
+    fun deleteEntryDevice(
+            @PathVariable deviceId: Long
+    ): BaseResponse<Void> {
+        deviceService.deleteEntryDevice(deviceId)
+        return BaseResponse.ok()
+    }
 }
