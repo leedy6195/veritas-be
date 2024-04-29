@@ -14,8 +14,8 @@ import org.springframework.web.client.RestTemplate
 class KakaoLoginService {
     private val restTemplate = RestTemplate()
     private val kakaoOauth2GrantType = "authorization_code"
-    private val kakaoClientId = "c836f69f636acefd8f6f1927225b6a36"
-    private val kakaoRedirectUri = "http://localhost:3000/kakaocallback"
+    private val kakaoClientId = "f5bddbec13302154bd32aba3b9bd7cac"
+    private val kakaoRedirectUri = "https://veritas-s.app/kakaocallback"
 
     fun getKakaoAccessToken(code: String): String {
         val headers = HttpHeaders()
