@@ -14,9 +14,9 @@ insert into student (id, serial, name, school, email, birth_date, tel, parent_te
 values (2, '20240412102501', '최민용', '구일고', 'minidragon81@naver.com', '880101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
 
 
-insert into kiosk (id, name, reading_room_id) values (1, '독서실A 키오스크', 1);
+insert into kiosk (id, name, reading_room_id) values (1, '5층 독서실 키오스크', 1);
 
-insert into entry_device (id, name, kiosk_id, access_type) values (1, '독서실 A 퇴실', 1, 'OUT');
+insert into entry_device (id, name, kiosk_id, access_type) values (1, '5층 독서실 퇴실', 1, 'OUT');
 
 insert into lecture_room (id, name) values (1, '강의실 A');
 
