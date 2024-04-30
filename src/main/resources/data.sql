@@ -5,13 +5,10 @@ insert into reading_room (id, name, width, height) values (1, '독서실 A', 10,
 insert into seat (id, reading_room_id, name, x, y, status) values (1, 1, '1', 2, 3, 'IDLE');
 
 insert into student (id, serial, name, school, email, birth_date, tel, parent_tel, course_type, created_at)
- values (1, '20240412102500', '이현태', '대치고', 'leedy6195@hanmail.net', '900101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
+ values (1, '20240412102500', '이동윤', '대치고', 'leedy6195@hanmail.net', '900101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
 
 insert into student (id, serial, name, school, email, birth_date, tel, parent_tel, course_type, created_at)
-values (2, '20240412102501', '최홍만', '분성고', 'hmchoi@naver.com', '880101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
-
-insert into student (id, serial, name, school, email, birth_date, tel, parent_tel, course_type, created_at)
-values (10001, '20240412102502', '김돌돌', '분성고', 'hmchoi@naver.com', '880101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
+values (2, '20240412102501', '최민용', '구일고', 'minidragon81@naver.com', '880101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
 
 
 insert into kiosk (id, name, reading_room_id) values (1, '독서실A 키오스크', 1);
