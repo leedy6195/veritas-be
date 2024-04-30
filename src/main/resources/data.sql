@@ -1,6 +1,6 @@
 insert into admin (id, login_id, name, password) values (1, 'admin', '이현태', '$2a$10$rO7ZveHMgvNyuF/18HjtteflqFXc3KTY7BTWB8VWVoVYVqnabTdme');
 
-insert into reading_room (id, name, width, height) values (1, '독서실 A', 10, 10);
+insert into reading_room (id, name, width, height, receiver_token) values (1, '5층 독서실', 10, 10, 'gkw2Gn2uWjv6qjmdwRIScd4V8Y5BMjFm');
 
 insert into seat (id, reading_room_id, name, x, y, status) values (1, 1, '1', 2, 3, 'IDLE');
 
