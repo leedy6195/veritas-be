@@ -2,7 +2,10 @@ insert into admin (id, login_id, name, password) values (1, 'admin', '이현태'
 
 insert into reading_room (id, name, width, height, receiver_token) values (1, '5층 독서실', 10, 10, 'gkw2Gn2uWjv6qjmdwRIScd4V8Y5BMjFm');
 
-insert into seat (id, reading_room_id, name, x, y, status) values (1, 1, '1', 2, 3, 'IDLE');
+insert into seat (id, reading_room_id, name, x, y, status) values (1, 1, '1', 1, 1, 'IDLE');
+insert into seat (id, reading_room_id, name, x, y, status) values (2, 1, '2', 10, 1, 'IDLE');
+insert into seat (id, reading_room_id, name, x, y, status) values (3, 1, '3', 1, 10, 'IDLE');
+insert into seat (id, reading_room_id, name, x, y, status) values (4, 1, '4', 10, 10, 'IDLE');
 
 insert into student (id, serial, name, school, email, birth_date, tel, parent_tel, course_type, created_at)
  values (1, '20240412102500', '이동윤', '대치고', 'leedy6195@hanmail.net', '900101', '010-1234-1234', '010-2345-2345', 'GENERAL', NOW());
