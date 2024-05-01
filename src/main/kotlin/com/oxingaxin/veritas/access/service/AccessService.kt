@@ -39,9 +39,9 @@ class AccessService(
             .orElseThrow { NotFoundException("좌석정보") }
 
         // if the seat is already occupied, throw an exception
-        if (seat.status == SeatStatus.OCCUPIED) {
-            throw RuntimeException("이미 사용중인 좌석입니다.")
-        }
+//        if (seat.status == SeatStatus.OCCUPIED) {
+//            throw RuntimeException("이미 사용중인 좌석입니다.")
+//        }
 
         // if user already has a seat in the room, throw an exception
         val todayEnter = readingRoomAccessRepository.findTodayEnter(room.id!!, student.id!!)
