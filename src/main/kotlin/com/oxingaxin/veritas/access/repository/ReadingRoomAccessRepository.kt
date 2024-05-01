@@ -32,4 +32,11 @@ interface ReadingRoomAccessRepository : JpaRepository<ReadingRoomAccess, Long> {
             studentId: Long
     ): Optional<ReadingRoomAccess>
 
+    @Query("SELECT rra FROM ReadingRoomAccess rra " +
+            "WHERE rra.readingRoom.id = :roomId " +
+            "AND rra.seat.id = :seatId " +
+            "AND FUNCTION('DATE', rra.enterTime) = FUNCTION('DATE', CURRENT_TIMESTAMP) " +
+            "ORDER BY rra.enterTime DESC " +
+            "LIMIT 1")
+    fun findByReadingRoomAndSeat(roomId: Long, seatId: Long): Optional<ReadingRoomAccess>
 }

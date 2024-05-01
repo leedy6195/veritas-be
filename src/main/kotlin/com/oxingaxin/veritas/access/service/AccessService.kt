@@ -32,39 +32,50 @@ class AccessService(
     fun saveReadingRoomAccess(readingRoomAccessCreateRequest: ReadingRoomAccessCreateRequest)
             : ReadingRoomAccessCreateResponse {
         val student = studentRepository.findBySerial(readingRoomAccessCreateRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+                .orElseThrow { NotFoundException("회원정보") }
         val room = readingRoomRepository.findById(readingRoomAccessCreateRequest.roomId)
-            .orElseThrow { NotFoundException("독서실정보") }
+                .orElseThrow { NotFoundException("독서실정보") }
         val seat = seatRepository.findById(readingRoomAccessCreateRequest.seatId)
-            .orElseThrow { NotFoundException("좌석정보") }
+                .orElseThrow { NotFoundException("좌석정보") }
+
+
+        // if user already has a seat in the room, throw an exception
+        val todayAccess = readingRoomAccessRepository.findTodayAccess(room.id!!, student.id!!)
+        if (todayAccess.isPresent && todayAccess.get().seat.id != seat.id) {
+            val seatName = todayAccess.get().seat.name
+            throw RuntimeException("이미 ${seatName}번 좌석을 사용중입니다.\n 좌석지정 없이 QR코드를 찍어주세요.")
+        }
+
+        if (seat.status == SeatStatus.OCCUPIED) {
+            readingRoomAccessRepository.findByReadingRoomAndSeat(room.id!!, seat.id!!).ifPresent {
+                if (it.student.id != student.id) {
+                    throw RuntimeException("이미 사용중인 좌석입니다.")
+                }
+            }
+        }
+
 
         // if the seat is already occupied, throw an exception
 //        if (seat.status == SeatStatus.OCCUPIED) {
 //            throw RuntimeException("이미 사용중인 좌석입니다.")
 //        }
 
-        // if user already has a seat in the room, throw an exception
-        val todayEnter = readingRoomAccessRepository.findTodayEnter(room.id!!, student.id!!)
-        if (todayEnter.isPresent) {
-            val seatName = todayEnter.get().seat.name
-            throw RuntimeException("이미 ${seatName}번 좌석을 사용중입니다.\n 좌석지정 없이 QR코드를 찍어주세요.")
-        }
-
 
         seat.status = SeatStatus.OCCUPIED
 
         val readingRoomAccess = ReadingRoomAccess(
-            student = student,
-            readingRoom = room,
-            seat = seat
+                student = student,
+                readingRoom = room,
+                seat = seat
         )
         val entry = readingRoomAccessRepository.save(readingRoomAccess)
+
         return ReadingRoomAccessCreateResponse(student.name, entry.enterTime!!)
     }
 
     fun deleteReadingRoomAccess(accessId: Long) {
         val readingRoomAccess = readingRoomAccessRepository.findById(accessId)
-            .orElseThrow { NotFoundException("입실정보") }
+                .orElseThrow { NotFoundException("입실정보") }
         val seat = readingRoomAccess.seat
         // if deleting access is today's access and is the only one,
         // change the seat status to idle
@@ -76,18 +87,19 @@ class AccessService(
         }
         readingRoomAccessRepository.delete(readingRoomAccess)
     }
+
     fun deleteLectureRoomAccess(accessId: Long) {
         val lectureRoomAccess = lectureRoomAccessRepository.findById(accessId)
-            .orElseThrow { NotFoundException("입실정보") }
+                .orElseThrow { NotFoundException("입실정보") }
         lectureRoomAccessRepository.delete(lectureRoomAccess)
     }
 
     fun findTodaySeatId(readingRoomAccessCheckRequest: ReadingRoomAccessCheckRequest)
             : ReadingRoomAccessCheckResponse? {
         val student = studentRepository.findBySerial(readingRoomAccessCheckRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+                .orElseThrow { NotFoundException("회원정보") }
         val readingRoomAccess =
-            readingRoomAccessRepository.findTodayAccess(readingRoomAccessCheckRequest.roomId, student.id!!)
+                readingRoomAccessRepository.findTodayAccess(readingRoomAccessCheckRequest.roomId, student.id!!)
 
         if (readingRoomAccess.isPresent) {
             if (readingRoomAccess.get().exitTime == null) {
@@ -105,14 +117,14 @@ class AccessService(
     fun exitReadingRoom(readingRoomExitRequest: ReadingRoomExitRequest)
             : ReadingRoomExitResponse {
         val student = studentRepository.findBySerial(readingRoomExitRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+                .orElseThrow { NotFoundException("회원정보") }
 
         val exitDevice = deviceRepository.findById(readingRoomExitRequest.deviceId)
-            .orElseThrow { NotFoundException("디바이스정보") }
+                .orElseThrow { NotFoundException("디바이스정보") }
         val kiosk = kioskRepository.findByEntryDevicesId(exitDevice.id!!)
-            .orElseThrow { NotFoundException("키오스크정보") }
+                .orElseThrow { NotFoundException("키오스크정보") }
         val readingRoom = readingRoomRepository.findByKiosksId(kiosk.id!!)
-            .orElseThrow { NotFoundException("독서실정보") }
+                .orElseThrow { NotFoundException("독서실정보") }
         val readingRoomAccess = readingRoomAccessRepository.findTodayEnter(readingRoom.id!!, student.id!!)
 
         if (readingRoomAccess.isPresent) {
@@ -132,9 +144,9 @@ class AccessService(
     fun accessLectureRoom(lectureRoomAccessRequest: LectureRoomAccessRequest)
             : LectureRoomAccessResponse {
         val student = studentRepository.findBySerial(lectureRoomAccessRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+                .orElseThrow { NotFoundException("회원정보") }
         val lectureRoom = deviceRepository.findById(lectureRoomAccessRequest.deviceId)
-            .orElseThrow { throw NotFoundException("디바이스정보") }.lectureRoom!!
+                .orElseThrow { throw NotFoundException("디바이스정보") }.lectureRoom!!
 
         if (lectureRoomAccessRequest.accessType == AccessType.IN) {
             val lectureRoomAccess = LectureRoomAccess(student = student, lectureRoom = lectureRoom)
@@ -145,7 +157,7 @@ class AccessService(
             return LectureRoomAccessResponse(student.name, entry.enterTime!!)
         } else {
             val todayLectureRoomAccess = lectureRoomAccessRepository.findTodayEnter(lectureRoom.id!!, student.id!!)
-                .orElseThrow { NotFoundException("입실 정보") }
+                    .orElseThrow { NotFoundException("입실 정보") }
             val now = LocalDateTime.now()
             todayLectureRoomAccess.exitTime = now
             return LectureRoomAccessResponse(student.name, now)
