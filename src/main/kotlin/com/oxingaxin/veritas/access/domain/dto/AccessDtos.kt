@@ -46,6 +46,7 @@ data class LectureRoomAccessResponse(
 )
 
 data class AttendanceResponse(
+        val attendanceCode: String,
         val studentName: String,
         val studentSerial: String,
         val roomType: String,

@@ -62,6 +62,26 @@ class AccessService(
         return ReadingRoomAccessCreateResponse(student.name, entry.enterTime!!)
     }
 
+    fun deleteReadingRoomAccess(accessId: Long) {
+        val readingRoomAccess = readingRoomAccessRepository.findById(accessId)
+            .orElseThrow { NotFoundException("입실정보") }
+        val seat = readingRoomAccess.seat
+        // if deleting access is today's access and is the only one,
+        // change the seat status to idle
+        if (readingRoomAccess.enterTime!!.toLocalDate() == LocalDateTime.now().toLocalDate()) {
+            val todayEnter = readingRoomAccessRepository.findTodayEnter(readingRoomAccess.readingRoom.id!!, readingRoomAccess.student.id!!)
+            if (todayEnter.isEmpty) {
+                seat.status = SeatStatus.IDLE
+            }
+        }
+        readingRoomAccessRepository.delete(readingRoomAccess)
+    }
+    fun deleteLectureRoomAccess(accessId: Long) {
+        val lectureRoomAccess = lectureRoomAccessRepository.findById(accessId)
+            .orElseThrow { NotFoundException("입실정보") }
+        lectureRoomAccessRepository.delete(lectureRoomAccess)
+    }
+
     fun findTodaySeatId(readingRoomAccessCheckRequest: ReadingRoomAccessCheckRequest)
             : ReadingRoomAccessCheckResponse? {
         val student = studentRepository.findBySerial(readingRoomAccessCheckRequest.serial)

@@ -17,6 +17,23 @@ class AccessController(
         return BaseResponse.ok(response)
     }
 
+    @DeleteMapping("/readingroom/{accessId}")
+    fun deleteReadingRoomAccess(
+            @PathVariable accessId: Long
+    ): BaseResponse<Void> {
+
+
+        accessService.deleteReadingRoomAccess(accessId)
+        return BaseResponse.ok()
+    }
+    @DeleteMapping("/lectureroom/{accessId}")
+    fun deleteLectureRoomAccess(
+            @PathVariable accessId: Long
+    ): BaseResponse<Void> {
+        accessService.deleteLectureRoomAccess(accessId)
+        return BaseResponse.ok()
+    }
+
     @PostMapping("/readingroom/enter")
     fun enterReadingRoom(
             @RequestBody readingRoomAccessCreateRequest: ReadingRoomAccessCreateRequest

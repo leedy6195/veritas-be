@@ -22,13 +22,13 @@ interface LectureRoomAccessRepository : JpaRepository<LectureRoomAccess, Long> {
     ): Optional<LectureRoomAccess>
 
     @Query("SELECT new com.oxingaxin.veritas.access.domain.dto.AttendanceResponse(" +
-            "s.name, s.serial, '강의실', l.name, a.enterTime, a.exitTime, s.courseType) " +
+            "'L' + a.id, s.name, s.serial, '강의실', l.name, a.enterTime, a.exitTime, s.courseType) " +
             "FROM LectureRoomAccess a " +
             "JOIN a.student s " +
             "JOIN a.lectureRoom l " +
             "UNION ALL " +
             "SELECT new com.oxingaxin.veritas.access.domain.dto.AttendanceResponse(" +
-            "s.name, s.serial, '독서실', r.name, a.enterTime, a.exitTime, s.courseType) " +
+            "'R'+ a.id, s.name, s.serial, '독서실', r.name, a.enterTime, a.exitTime, s.courseType) " +
             "FROM ReadingRoomAccess a " +
             "JOIN a.student s " +
             "JOIN a.readingRoom r ")
