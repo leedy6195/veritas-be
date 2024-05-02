@@ -39,4 +39,9 @@ interface ReadingRoomAccessRepository : JpaRepository<ReadingRoomAccess, Long> {
             "ORDER BY rra.enterTime DESC " +
             "LIMIT 1")
     fun findByReadingRoomAndSeat(roomId: Long, seatId: Long): Optional<ReadingRoomAccess>
+
+    @Query("SELECT rra FROM ReadingRoomAccess rra " +
+            "WHERE FUNCTION('DATE', rra.enterTime) = CURRENT_DATE - 1 " +
+            "AND rra.exitTime IS NULL")
+    fun findYesterdayEnter(): List<ReadingRoomAccess>
 }

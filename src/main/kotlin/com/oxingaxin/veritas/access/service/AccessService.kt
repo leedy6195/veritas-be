@@ -9,7 +9,6 @@ import com.oxingaxin.veritas.common.exception.NotFoundException
 import com.oxingaxin.veritas.device.domain.entity.AccessType
 import com.oxingaxin.veritas.device.repository.EntryDeviceRepository
 import com.oxingaxin.veritas.device.repository.KioskRepository
-import com.oxingaxin.veritas.facility.domain.entity.LectureRoom
 import com.oxingaxin.veritas.facility.domain.entity.SeatStatus
 import com.oxingaxin.veritas.facility.repository.ReadingRoomRepository
 import com.oxingaxin.veritas.facility.repository.SeatRepository
@@ -135,6 +134,12 @@ class AccessService(
         } else {
             throw NotFoundException("입실 정보")
         }
+    }
+    fun exitAllReadingRoomEnter() {
+        readingRoomAccessRepository.findYesterdayEnter().forEach {
+            it.exitTime = LocalDateTime.now()
+        }
+
     }
 
     /**
