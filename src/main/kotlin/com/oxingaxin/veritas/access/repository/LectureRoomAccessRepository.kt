@@ -33,4 +33,20 @@ interface LectureRoomAccessRepository : JpaRepository<LectureRoomAccess, Long> {
             "JOIN a.student s " +
             "JOIN a.readingRoom r ")
     fun findAttendanceResponses(): List<AttendanceResponse>
+
+
+    @Query("SELECT new com.oxingaxin.veritas.access.domain.dto.AttendanceResponse(" +
+            "CONCAT('L', a.id), s.name, s.serial, '강의실', l.name, a.enterTime, a.exitTime, s.courseType) " +
+            "FROM LectureRoomAccess a " +
+            "JOIN a.student s " +
+            "JOIN a.lectureRoom l " +
+            "WHERE s.id = :studentId " +
+            "UNION ALL " +
+            "SELECT new com.oxingaxin.veritas.access.domain.dto.AttendanceResponse(" +
+            "CONCAT('R', a.id), s.name, s.serial, '독서실', r.name, a.enterTime, a.exitTime, s.courseType) " +
+            "FROM ReadingRoomAccess a " +
+            "JOIN a.student s " +
+            "JOIN a.readingRoom r " +
+            "WHERE s.id = :studentId ")
+    fun findMyAttendanceResponses(studentId: Long): List<AttendanceResponse>
 }

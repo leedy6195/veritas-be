@@ -172,4 +172,8 @@ class AccessService(
     fun findAttendances(): List<AttendanceResponse> {
         return lectureRoomAccessRepository.findAttendanceResponses().sortedByDescending { it.enterTime }
     }
+
+    fun findMyAttendances(studentId: Long): List<AttendanceResponse> {
+        return lectureRoomAccessRepository.findMyAttendanceResponses(studentId).sortedByDescending { it.enterTime }
+    }
 }

@@ -3,6 +3,7 @@ package com.oxingaxin.veritas.access.controller
 import com.oxingaxin.veritas.access.domain.dto.*
 import com.oxingaxin.veritas.access.service.AccessService
 import com.oxingaxin.veritas.common.BaseResponse
+import com.oxingaxin.veritas.common.argumentresolver.LoggedIn
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,6 +15,12 @@ class AccessController(
     @GetMapping
     fun getAttendances(): BaseResponse<List<AttendanceResponse>> {
         val response = accessService.findAttendances()
+        return BaseResponse.ok(response)
+    }
+
+    @GetMapping("/my")
+    fun getMyAttendances(@LoggedIn studentId: Long): BaseResponse<List<AttendanceResponse>> {
+        val response = accessService.findMyAttendances(studentId)
         return BaseResponse.ok(response)
     }
 
