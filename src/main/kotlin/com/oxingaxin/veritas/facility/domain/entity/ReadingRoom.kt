@@ -24,7 +24,7 @@ class ReadingRoom(
         var receiverToken: String,
 
         @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
-        var seats: List<Seat>? = null,
+        var seats: List<Seat>? = mutableListOf(),
 
         @OneToMany(fetch = FetchType.LAZY, mappedBy = "readingRoom")
         @OnDelete(action = OnDeleteAction.SET_NULL)

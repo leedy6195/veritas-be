@@ -3,6 +3,7 @@ package com.oxingaxin.veritas.common.scheduler
 import com.oxingaxin.veritas.access.service.AccessService
 import com.oxingaxin.veritas.facility.domain.entity.SeatStatus
 import com.oxingaxin.veritas.facility.service.ReadingRoomService
+import jakarta.transaction.Transactional
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
@@ -11,6 +12,7 @@ class MidnightScheduler(
         private val accessService: AccessService,
         private val readingRoomService: ReadingRoomService
 ) {
+    @Transactional
     @Scheduled(cron = "0 3 0 * * *")
     fun runAtMidnight() {
         /**
