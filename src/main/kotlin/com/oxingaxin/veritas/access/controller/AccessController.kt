@@ -19,7 +19,10 @@ class AccessController(
     }
 
     @GetMapping("/my")
-    fun getMyAttendances(@LoggedIn studentId: Long): BaseResponse<List<AttendanceResponse>> {
+    fun getMyAttendances(@LoggedIn studentId: Long?): BaseResponse<List<AttendanceResponse>> {
+        if (studentId == null) {
+            return BaseResponse.ok(null)
+        }
         val response = accessService.findMyAttendances(studentId)
         return BaseResponse.ok(response)
     }
