@@ -4,14 +4,14 @@ import com.oxingaxin.veritas.common.exception.NotFoundException
 import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.domain.entity.Seat
-import com.oxingaxin.veritas.facility.repository.ReadingRoomFluxRepository
+
 import com.oxingaxin.veritas.facility.repository.ReadingRoomRepository
-import com.oxingaxin.veritas.facility.repository.SeatFluxRepository
+
 import com.oxingaxin.veritas.facility.repository.SeatRepository
 import com.oxingaxin.veritas.student.repository.StudentRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import reactor.core.publisher.Mono
+
 
 @Service
 @Transactional
@@ -19,8 +19,6 @@ class ReadingRoomService(
         private val readingRoomRepository: ReadingRoomRepository,
         private val seatRepository: SeatRepository,
         private val studentRepository: StudentRepository,
-        private val readingRoomFluxRepository: ReadingRoomFluxRepository,
-        private val seatFluxRepository: SeatFluxRepository
 ) {
     fun saveReadingRoom(readingRoomCreateRequest: ReadingRoomCreateRequest): ReadingRoomCreateResponse {
         val readingRoom = ReadingRoom(
@@ -57,9 +55,6 @@ class ReadingRoomService(
         return readingRoomRepository.findById(id).orElseThrow { NotFoundException("readingRoom", "id", id.toString()) }
     }
 
-    fun findReadingRoomFluxById(id: Long): Mono<ReadingRoom> {
-        return readingRoomFluxRepository.findById(id)
-    }
 
     fun findSeatById(id: Long): Seat {
         return seatRepository.findById(id).orElseThrow { NotFoundException("seat", "id", id.toString()) }
