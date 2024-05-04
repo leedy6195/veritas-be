@@ -5,6 +5,7 @@ import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.service.ReadingRoomService
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/readingrooms")
@@ -48,6 +49,14 @@ class ReadingRoomController(
             @PathVariable roomId: Long
     ): BaseResponse<ReadingRoom> {
         val readingRoom = readingRoomService.findReadingRoomById(roomId)
+        return BaseResponse.ok(readingRoom)
+    }
+
+    @GetMapping("/flux/{roomId}")
+    fun getReadingRoomFlux(
+            @PathVariable roomId: Long
+    ): BaseResponse<Mono<ReadingRoom>> {
+        val readingRoom = readingRoomService.findReadingRoomFluxById(roomId)
         return BaseResponse.ok(readingRoom)
     }
 
