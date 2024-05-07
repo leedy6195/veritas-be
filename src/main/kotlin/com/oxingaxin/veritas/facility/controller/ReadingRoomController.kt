@@ -1,10 +1,12 @@
 package com.oxingaxin.veritas.facility.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import com.oxingaxin.veritas.common.BaseResponse
 import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.service.ReadingRoomService
+import org.springframework.http.MediaType
+
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
@@ -71,7 +73,7 @@ class ReadingRoomController(
         return BaseResponse.deleted()
     }
 
-    @GetMapping("/{roomId}/seats/status")
+    @GetMapping("/{roomId}/seats/status", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun seatUpdates(): SseEmitter {
         return emitter
     }
