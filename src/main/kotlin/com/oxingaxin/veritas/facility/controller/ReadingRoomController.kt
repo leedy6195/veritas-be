@@ -74,6 +74,7 @@ class ReadingRoomController(
 
     @GetMapping("/{roomId}/seats/status")
     fun seatUpdates(): SseEmitter {
+        emitter.send(SseEmitter.event().name("seatUpdate").data("dummy"))
         return emitter
     }
 
