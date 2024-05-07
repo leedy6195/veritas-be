@@ -80,7 +80,7 @@ class ReadingRoomController(
         emitter.onCompletion { emitters.remove(emitter.toString()) }
         emitter.onTimeout { emitter.complete() }
 
-        emitter.send(SseEmitter.event().comment("connected"))
+        emitter.send(SseEmitter.event().data("connected"))
 
         emitters[emitter.toString()] = emitter
         return emitter
