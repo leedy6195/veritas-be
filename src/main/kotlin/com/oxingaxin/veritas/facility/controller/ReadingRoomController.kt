@@ -1,5 +1,6 @@
 package com.oxingaxin.veritas.facility.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.oxingaxin.veritas.common.BaseResponse
 import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 @RequestMapping("/api/readingrooms")
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
+ private val objectMapper: ObjectMapper
 ){
     private val emitter = SseEmitter()
 
@@ -82,7 +84,8 @@ class ReadingRoomController(
             @RequestBody seatUpdateRequest: SeatUpdateRequest
     ): BaseResponse<SeatUpdateResponse> {
         val seatUpdateResponse = readingRoomService.updateSeat(seatId, seatUpdateRequest)
-        emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
+        val eventData = objectMapper.writeValueAsString(seatUpdateResponse)
+        emitter.send(SseEmitter.event().name("seatUpdate").data(eventData))
         return BaseResponse.ok(seatUpdateResponse)
     }
 
