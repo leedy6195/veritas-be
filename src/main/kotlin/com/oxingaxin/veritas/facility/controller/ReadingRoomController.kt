@@ -87,20 +87,6 @@ class ReadingRoomController(
         return emitter
     }
 
-    @GetMapping("/{roomId}/seats/status/ping")
-    fun ping(): BaseResponse<Void> {
-        emitters.forEach { (_, emitter) ->
-            try {
-                emitter.send(SseEmitter.event().data("connected"))
-                return BaseResponse.ok()
-            } catch (e: Exception) {
-                emitters.remove(emitter.toString())
-            }
-        }
-        return BaseResponse.error(HttpStatus.NOT_FOUND.value(), "No clients connected")
-
-    }
-
 
     @PutMapping("/{roomId}/seats/{seatId}")
     fun updateSeat(
