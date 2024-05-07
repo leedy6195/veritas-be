@@ -76,7 +76,7 @@ class ReadingRoomController(
 
     @GetMapping("/{roomId}/seats/status", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun seatUpdates(@PathVariable roomId: Long): SseEmitter {
-        val emitter = SseEmitter(60 * 1000)
+        val emitter = SseEmitter()
         emitter.onCompletion { emitters.remove(emitter.toString()) }
         emitter.onTimeout { emitter.complete() }
 
