@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 @RequestMapping("/api/readingrooms")
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
- private val objectMapper: ObjectMapper
 ){
     private val emitter = SseEmitter()
 
@@ -74,7 +73,6 @@ class ReadingRoomController(
 
     @GetMapping("/{roomId}/seats/status")
     fun seatUpdates(): SseEmitter {
-        emitter.send(SseEmitter.event().name("seatUpdate").data("dummy"))
         return emitter
     }
 
@@ -85,8 +83,7 @@ class ReadingRoomController(
             @RequestBody seatUpdateRequest: SeatUpdateRequest
     ): BaseResponse<SeatUpdateResponse> {
         val seatUpdateResponse = readingRoomService.updateSeat(seatId, seatUpdateRequest)
-        val eventData = objectMapper.writeValueAsString(seatUpdateResponse)
-        emitter.send(SseEmitter.event().name("seatUpdate").data(eventData))
+        emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
         return BaseResponse.ok(seatUpdateResponse)
     }
 
