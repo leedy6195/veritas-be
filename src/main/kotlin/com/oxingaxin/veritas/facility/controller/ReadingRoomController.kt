@@ -5,12 +5,15 @@ import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.service.ReadingRoomService
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 @RestController
 @RequestMapping("/api/readingrooms")
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
 ){
+    private val emitter = SseEmitter()
+
     @PostMapping
     fun createReadingRoom(
             @RequestBody readingRoomCreateRequest: ReadingRoomCreateRequest
@@ -66,6 +69,12 @@ class ReadingRoomController(
         readingRoomService.deleteSeat(seatId)
         return BaseResponse.deleted()
     }
+
+    @GetMapping("/{roomId}/seats/status")
+    fun seatUpdates(): SseEmitter {
+        return emitter
+    }
+
     @PutMapping("/{roomId}/seats/{seatId}")
     fun updateSeat(
             @PathVariable roomId: String,
@@ -73,7 +82,7 @@ class ReadingRoomController(
             @RequestBody seatUpdateRequest: SeatUpdateRequest
     ): BaseResponse<SeatUpdateResponse> {
         val seatUpdateResponse = readingRoomService.updateSeat(seatId, seatUpdateRequest)
-
+        emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
         return BaseResponse.ok(seatUpdateResponse)
     }
 
