@@ -9,13 +9,14 @@ import org.springframework.http.MediaType
 
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.util.concurrent.ConcurrentHashMap
 
 @RestController
 @RequestMapping("/api/readingrooms")
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
 ){
-    private val emitter = SseEmitter(60 * 1000)
+    private val emitters = ConcurrentHashMap<String, SseEmitter>()
 
     @PostMapping
     fun createReadingRoom(
@@ -74,8 +75,14 @@ class ReadingRoomController(
     }
 
     @GetMapping("/{roomId}/seats/status", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun seatUpdates(): SseEmitter {
-        emitter.send(SseEmitter.event().name("seatUpdate").data("connected"))
+    fun seatUpdates(@PathVariable roomId: Long): SseEmitter {
+        val emitter = SseEmitter(60 * 1000)
+        emitter.onCompletion { emitters.remove(emitter.toString()) }
+        emitter.onTimeout { emitter.complete() }
+
+        emitter.send(SseEmitter.event().comment("connected"))
+
+        emitters[emitter.toString()] = emitter
         return emitter
     }
 
@@ -86,7 +93,13 @@ class ReadingRoomController(
             @RequestBody seatUpdateRequest: SeatUpdateRequest
     ): BaseResponse<SeatUpdateResponse> {
         val seatUpdateResponse = readingRoomService.updateSeat(seatId, seatUpdateRequest)
-        emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
+        emitters.forEach { (_, emitter) ->
+            try {
+                emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
+            } catch (e: Exception) {
+                emitters.remove(emitter.toString())
+            }
+        }
         return BaseResponse.ok(seatUpdateResponse)
     }
 
