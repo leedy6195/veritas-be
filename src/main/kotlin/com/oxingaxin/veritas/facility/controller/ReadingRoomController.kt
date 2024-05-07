@@ -5,6 +5,7 @@ import com.oxingaxin.veritas.common.BaseResponse
 import com.oxingaxin.veritas.facility.domain.dto.*
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.service.ReadingRoomService
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 import org.springframework.web.bind.annotation.*
@@ -91,11 +92,13 @@ class ReadingRoomController(
         emitters.forEach { (_, emitter) ->
             try {
                 emitter.send(SseEmitter.event().data("connected"))
+                return BaseResponse.ok()
             } catch (e: Exception) {
                 emitters.remove(emitter.toString())
             }
         }
-        return BaseResponse.ok()
+        return BaseResponse.error(HttpStatus.NOT_FOUND.value(), "No clients connected")
+
     }
 
 
