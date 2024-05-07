@@ -75,6 +75,7 @@ class ReadingRoomController(
 
     @GetMapping("/{roomId}/seats/status", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun seatUpdates(): SseEmitter {
+        emitter.send(SseEmitter.event().name("seatUpdate").data("connected"))
         return emitter
     }
 
