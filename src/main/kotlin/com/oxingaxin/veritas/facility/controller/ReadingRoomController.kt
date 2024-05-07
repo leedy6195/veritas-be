@@ -80,11 +80,24 @@ class ReadingRoomController(
         emitter.onCompletion { emitters.remove(emitter.toString()) }
         emitter.onTimeout { emitter.complete() }
 
-        emitter.send(SseEmitter.event().data("connected"))
+
 
         emitters[emitter.toString()] = emitter
         return emitter
     }
+
+    @GetMapping("/{roomId}/seats/status/ping")
+    fun ping(): BaseResponse<Void> {
+        emitters.forEach { (_, emitter) ->
+            try {
+                emitter.send(SseEmitter.event().data("connected"))
+            } catch (e: Exception) {
+                emitters.remove(emitter.toString())
+            }
+        }
+        return BaseResponse.ok()
+    }
+
 
     @PutMapping("/{roomId}/seats/{seatId}")
     fun updateSeat(
