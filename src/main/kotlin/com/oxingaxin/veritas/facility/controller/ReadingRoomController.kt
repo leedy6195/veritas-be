@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
 ){
-    private val emitter = SseEmitter()
+    private val emitter = SseEmitter(60 * 1000)
 
     @PostMapping
     fun createReadingRoom(
