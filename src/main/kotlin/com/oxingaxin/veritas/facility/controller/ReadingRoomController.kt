@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
 class ReadingRoomController(
  private val readingRoomService: ReadingRoomService,
 ){
-    private val emitters = ConcurrentHashMap<String, SseEmitter>()
+    //private val emitters = ConcurrentHashMap<String, SseEmitter>()
 
     @PostMapping
     fun createReadingRoom(
@@ -75,11 +75,12 @@ class ReadingRoomController(
         return BaseResponse.deleted()
     }
 
+    /*
     @GetMapping("/{roomId}/seats/status", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun seatUpdates(@PathVariable roomId: Long): SseEmitter {
         val emitter = SseEmitter()
+
         emitter.onCompletion {
-            emitter.send(SseEmitter.event().name("seatUpdate").data("complete"))
             emitters.remove(emitter.toString())
         }
         emitter.onTimeout { emitter.complete() }
@@ -90,6 +91,8 @@ class ReadingRoomController(
         return emitter
     }
 
+     */
+
 
     @PutMapping("/{roomId}/seats/{seatId}")
     fun updateSeat(
@@ -98,13 +101,17 @@ class ReadingRoomController(
             @RequestBody seatUpdateRequest: SeatUpdateRequest
     ): BaseResponse<SeatUpdateResponse> {
         val seatUpdateResponse = readingRoomService.updateSeat(seatId, seatUpdateRequest)
+        /*
         emitters.forEach { (_, emitter) ->
             try {
+
                 emitter.send(SseEmitter.event().name("seatUpdate").data(seatUpdateResponse))
             } catch (e: Exception) {
                 emitters.remove(emitter.toString())
             }
         }
+
+         */
         return BaseResponse.ok(seatUpdateResponse)
     }
 
