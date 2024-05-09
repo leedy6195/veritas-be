@@ -137,11 +137,25 @@ class AccessService(
             .orElseThrow { NotFoundException("디바이스정보") }
         val kiosk = kioskRepository.findByEntryDevicesId(exitDevice.id!!)
             .orElseThrow { NotFoundException("키오스크정보") }
-        val readingRoom = readingRoomRepository.findByKiosksId(kiosk.id!!)
+        val room = readingRoomRepository.findByKiosksId(kiosk.id!!)
             .orElseThrow { NotFoundException("독서실정보") }
-        val readingRoomAccess = readingRoomAccessRepository.findTodayEnter(readingRoom.id!!, student.id!!)
+        val readingRoomAccess = readingRoomAccessRepository.findTodayEnter(room.id!!, student.id!!)
 
         if (readingRoomAccess.isPresent) {
+
+            GlobalScope.launch {
+                ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
+                if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
+                    receiverUtil.openDoor(room)
+                }
+                delay(10000)
+                ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
+                if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
+                    receiverUtil.closeDoor(room)
+                }
+            }
+
+
             val now = LocalDateTime.now()
             readingRoomAccess.get().exitTime = now
             return ReadingRoomExitResponse(student.name, now)
