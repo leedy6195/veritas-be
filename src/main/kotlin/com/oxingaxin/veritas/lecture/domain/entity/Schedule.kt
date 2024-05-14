@@ -1,5 +1,6 @@
 package com.oxingaxin.veritas.lecture.domain.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalTime
@@ -10,6 +11,7 @@ class Schedule(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
 
+        @JsonIgnore
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "lecture_id")
         var lecture: Lecture,
