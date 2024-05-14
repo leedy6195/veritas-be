@@ -4,7 +4,7 @@ import com.oxingaxin.veritas.lecture.domain.entity.Lecture
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class LectureCreateRequest(
+data class LectureRequest(
         val name: String,
         val description: String?,
         val instructor: String,

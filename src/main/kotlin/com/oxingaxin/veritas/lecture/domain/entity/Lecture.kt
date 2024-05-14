@@ -18,39 +18,40 @@ class Lecture(
 
         var instructor: String,
 
-    var startDate: LocalDate,
-    var endDate: LocalDate,
+        @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+        var schedules: MutableList<Schedule> = mutableListOf(),
 
-    var monStartTime: LocalTime?,
-    var monEndTime: LocalTime?,
+        var startDate: LocalDate,
+        var endDate: LocalDate,
 
-    var tueStartTime: LocalTime?,
-    var tueEndTime: LocalTime?,
+        var monStartTime: LocalTime?,
+        var monEndTime: LocalTime?,
 
-    var wedStartTime: LocalTime?,
-    var wedEndTime: LocalTime?,
+        var tueStartTime: LocalTime?,
+        var tueEndTime: LocalTime?,
 
-    var thuStartTime: LocalTime?,
-    var thuEndTime: LocalTime?,
+        var wedStartTime: LocalTime?,
+        var wedEndTime: LocalTime?,
 
-    var friStartTime: LocalTime?,
-    var friEndTime: LocalTime?,
+        var thuStartTime: LocalTime?,
+        var thuEndTime: LocalTime?,
 
-    var satStartTime: LocalTime?,
-    var satEndTime: LocalTime?,
+        var friStartTime: LocalTime?,
+        var friEndTime: LocalTime?,
 
-    var sunStartTime: LocalTime?,
-    var sunEndTime: LocalTime?,
+        var satStartTime: LocalTime?,
+        var satEndTime: LocalTime?,
 
-    var createdAt: LocalDateTime? = null,
+        var sunStartTime: LocalTime?,
+        var sunEndTime: LocalTime?,
 
-) {
+        var createdAt: LocalDateTime? = null,
+
+        ) {
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
     }
-
-
 
 
 }
