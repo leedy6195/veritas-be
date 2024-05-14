@@ -18,6 +18,8 @@ class Lecture(
 
         var instructor: String,
 
+        var fee: Long?,
+
         @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
         var schedules: MutableList<Schedule> = mutableListOf(),
 
