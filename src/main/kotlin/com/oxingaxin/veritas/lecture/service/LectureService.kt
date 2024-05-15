@@ -27,7 +27,7 @@ class LectureService(
         val lecture =  lectureRepository.findById(lectureId)
             .orElseThrow { NotFoundException("강의") }
 
-        lecture.schedules.sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime })
+        lecture.schedules = lecture.schedules.sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime }).toMutableList()
         return lecture
 
     }
