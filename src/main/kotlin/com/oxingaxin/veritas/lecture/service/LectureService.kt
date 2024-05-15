@@ -19,7 +19,8 @@ class LectureService(
 ) {
 
     fun findSchedules(lectureId: Long): List<Schedule> {
-        return scheduleRepository.findByLectureId(lectureId).sortedBy { it.date }.sortedBy { it.startTime }
+        return scheduleRepository.findByLectureId(lectureId)
+            .sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime })
     }
 
     fun findLecture(lectureId: Long): Lecture {
