@@ -24,8 +24,12 @@ class LectureService(
     }
 
     fun findLecture(lectureId: Long): Lecture {
-        return lectureRepository.findById(lectureId)
+        val lecture =  lectureRepository.findById(lectureId)
             .orElseThrow { NotFoundException("강의") }
+
+        lecture.schedules.sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime })
+        return lecture
+
     }
 
     fun findLectures(): List<Lecture> = lectureRepository.findAll()
