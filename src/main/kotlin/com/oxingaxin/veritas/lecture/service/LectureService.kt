@@ -2,6 +2,7 @@ package com.oxingaxin.veritas.lecture.service
 
 import com.oxingaxin.veritas.common.exception.NotFoundException
 import com.oxingaxin.veritas.lecture.domain.dto.LectureRequest
+import com.oxingaxin.veritas.lecture.domain.dto.ScheduleRequest
 import com.oxingaxin.veritas.lecture.domain.entity.Lecture
 import com.oxingaxin.veritas.lecture.domain.entity.Schedule
 import com.oxingaxin.veritas.lecture.repository.LectureRepository
@@ -16,6 +17,16 @@ class LectureService(
         private val lectureRepository: LectureRepository,
         private val scheduleRepository: ScheduleRepository
 ) {
+
+    fun findSchedules(lectureId: Long): List<Schedule> {
+        return scheduleRepository.findByLectureId(lectureId)
+    }
+
+    fun findLecture(lectureId: Long): Lecture {
+        return lectureRepository.findById(lectureId)
+            .orElseThrow { NotFoundException("강의") }
+    }
+
     fun findLectures(): List<Lecture> = lectureRepository.findAll()
     fun saveLecture(lectureRequest: LectureRequest) {
         val lecture = lectureRequest.toEntity()
@@ -26,7 +37,6 @@ class LectureService(
 
         val schedules = mutableListOf<Schedule>()
 
-        var sequence = 1
         var currentDate = startDate
 
         while (currentDate <= endDate) {
@@ -46,14 +56,12 @@ class LectureService(
             if (startTime != null && endTime != null) {
                 val schedule = Schedule(
                     lecture = lecture,
-                    sequence = sequence,
                     date = currentDate,
                     startTime = startTime,
                     endTime = endTime,
                     description = "${dayOfWeek.name} $startTime - $endTime"
                 )
                 schedules.add(schedule)
-                sequence++
             }
 
             currentDate = currentDate.plusDays(1)
@@ -97,5 +105,20 @@ class LectureService(
                 sunEndTime = this@with.sunEndTime
             }
         }
+    }
+
+    fun saveSchedule(lectureId: Long, scheduleRequest: ScheduleRequest) {
+        val lecture = lectureRepository.findById(lectureId)
+            .orElseThrow { NotFoundException("강의") }
+
+        val schedule = Schedule(
+            lecture = lecture,
+            date = scheduleRequest.date,
+            startTime = scheduleRequest.startTime,
+            endTime = scheduleRequest.endTime,
+            description = scheduleRequest.description
+        )
+
+        scheduleRepository.save(schedule)
     }
 }

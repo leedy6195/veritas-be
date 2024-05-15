@@ -2,7 +2,9 @@ package com.oxingaxin.veritas.lecture.controller
 
 import com.oxingaxin.veritas.common.BaseResponse
 import com.oxingaxin.veritas.lecture.domain.dto.LectureRequest
+import com.oxingaxin.veritas.lecture.domain.dto.ScheduleRequest
 import com.oxingaxin.veritas.lecture.domain.entity.Lecture
+import com.oxingaxin.veritas.lecture.domain.entity.Schedule
 import com.oxingaxin.veritas.lecture.service.LectureService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -50,6 +52,31 @@ class LectureController(
     fun getLectures(): BaseResponse<List<Lecture>> {
         val lectures = lectureService.findLectures()
         return BaseResponse.ok(lectures)
+    }
+
+    @GetMapping("/{lectureId}")
+    fun getLecture(
+            @PathVariable lectureId: Long
+    ): BaseResponse<Lecture> {
+        val lecture = lectureService.findLecture(lectureId)
+        return BaseResponse.ok(lecture)
+    }
+
+    @GetMapping("/{lectureId}/schedules")
+    fun getSchedules(
+            @PathVariable lectureId: Long
+    ): BaseResponse<List<Schedule>> {
+        val schedules = lectureService.findSchedules(lectureId)
+        return BaseResponse.ok(schedules)
+    }
+
+    @PostMapping("/{lectureId}/schedules")
+    fun createSchedule(
+            @PathVariable lectureId: Long,
+            @RequestBody scheduleRequest: ScheduleRequest
+    ): BaseResponse<Unit> {
+        lectureService.saveSchedule(lectureId, scheduleRequest)
+        return BaseResponse.ok()
     }
 
 }

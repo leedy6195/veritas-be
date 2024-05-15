@@ -19,8 +19,6 @@ class Schedule(
         @OnDelete(action = OnDeleteAction.CASCADE)
         var lecture: Lecture,
 
-        var sequence: Int,
-
         var date: LocalDate,
 
         var startTime: LocalTime,
