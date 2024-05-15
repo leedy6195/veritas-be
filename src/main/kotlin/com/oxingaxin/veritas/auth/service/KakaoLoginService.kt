@@ -53,10 +53,10 @@ class KakaoLoginService {
         )
 
         val userInfo = response.body?.get("kakao_account") as Map<*, *>
-        val email = userInfo["email"] as String
+        val phoneNumber = userInfo["phone_number"] as String
         //val profileInfo = userInfo["profile"] as Map<*, *>
         //val nickname = profileInfo["nickname"] as String
 
-        return KakaoUserInfo(email)
+        return KakaoUserInfo(phoneNumber)
     }
 }

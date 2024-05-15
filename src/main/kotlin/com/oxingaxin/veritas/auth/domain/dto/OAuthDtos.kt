@@ -1,7 +1,7 @@
 package com.oxingaxin.veritas.auth.domain.dto
 
 data class KakaoUserInfo(
-        val email: String
+    val phoneNumber: String
 )
 
 data class SessionCheckResponse(

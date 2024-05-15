@@ -34,9 +34,8 @@ class StudentService(
             createdAt = student.createdAt!!)
     }
 
-    fun findByEmail(email: String): Optional<Student> {
-        return studentRepository.findByEmail(email)
-
+    fun findByTel(tel: String): Optional<Student> {
+        return studentRepository.findByTel(tel)
     }
 
     fun findStudents(): List<StudentResponse> {

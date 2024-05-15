@@ -8,7 +8,6 @@ import com.oxingaxin.veritas.common.argumentresolver.LoggedIn
 import com.oxingaxin.veritas.student.service.StudentService
 import jakarta.servlet.http.HttpSession
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -32,7 +31,8 @@ class OAuthController(
         val kakaoUserInfo = kakaoLoginService.getKakaoUserInfo(accessToken)
 
         // get student with same email
-        val optionalStudent = studentService.findByEmail(kakaoUserInfo.email)
+        //val optionalStudent = studentService.findByEmail(kakaoUserInfo.email)
+        val optionalStudent = studentService.findByTel(kakaoUserInfo.phoneNumber.replace("+82 ", "0"))
         if (optionalStudent.isPresent) {
             val student = optionalStudent.get()
             httpSession.setAttribute(Constants.LOGIN_STUDENT_ID_SESSION_KEY, student.id)

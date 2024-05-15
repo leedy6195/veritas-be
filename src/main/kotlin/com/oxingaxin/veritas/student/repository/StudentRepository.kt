@@ -7,5 +7,5 @@ import java.util.*
 interface StudentRepository : JpaRepository<Student, Long> {
     fun findBySerial(serial: String): Optional<Student>
 
-    fun findByEmail(email: String): Optional<Student>
+    fun findByTel(tel: String): Optional<Student>
 }
