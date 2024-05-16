@@ -1,11 +1,11 @@
 package com.oxingaxin.veritas.common.scheduler
 
-import com.oxingaxin.veritas.access.service.AccessService
 import com.oxingaxin.veritas.lecture.service.EnrollmentService
 import com.oxingaxin.veritas.lecture.service.ScheduleAttendanceService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 
 @Component
@@ -26,7 +26,9 @@ class AttendanceScheduler(
 
         val enrollments = enrollmentService.findEnrollments()
         val studentScheduleMap = enrollments.map { enrollment ->
-            enrollment.student.id!! to enrollment.lecture.schedules.map { it.id!! }.toList()
+            enrollment.student.id!! to enrollment.lecture.schedules
+                .filter { it.date.atTime(it.endTime) <= LocalDateTime.now() }
+                .map { it.id!! }.toList()
         }.toMap()
 
         studentScheduleMap.forEach { (studentId, scheduleIds) ->

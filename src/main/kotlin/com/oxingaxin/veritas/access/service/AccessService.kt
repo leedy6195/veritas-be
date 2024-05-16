@@ -180,7 +180,8 @@ class AccessService(
      **/
 
     fun getAttendanceStatus(studentId: Long, startDateTime: LocalDateTime, endDateTime: LocalDateTime): AttendanceStatus {
-        return lectureRoomAccessRepository.getAttendanceStatus(studentId, startDateTime, endDateTime)
+        val status = lectureRoomAccessRepository.getAttendanceStatus(studentId, startDateTime, endDateTime)
+        return AttendanceStatus.valueOf(status)
     }
 
     fun accessLectureRoom(lectureRoomAccessRequest: LectureRoomAccessRequest)

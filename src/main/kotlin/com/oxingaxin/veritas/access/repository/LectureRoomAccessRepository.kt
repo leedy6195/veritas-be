@@ -3,7 +3,6 @@ package com.oxingaxin.veritas.access.repository
 
 import com.oxingaxin.veritas.access.domain.dto.AttendanceResponse
 import com.oxingaxin.veritas.access.domain.entity.LectureRoomAccess
-import com.oxingaxin.veritas.lecture.domain.entity.AttendanceStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
@@ -39,7 +38,7 @@ interface LectureRoomAccessRepository : JpaRepository<LectureRoomAccess, Long> {
             studentId: Long,
             startDateTime: LocalDateTime,
             endDateTime: LocalDateTime
-    ): AttendanceStatus
+    ): String
 
     @Query("SELECT new com.oxingaxin.veritas.access.domain.dto.AttendanceResponse(" +
             "CONCAT('L', a.id), s.name, s.serial, '강의실', l.name, a.enterTime, a.exitTime, s.courseType) " +
