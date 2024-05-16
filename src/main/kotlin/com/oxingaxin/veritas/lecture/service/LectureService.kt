@@ -92,6 +92,7 @@ class LectureService(
                 description = this@with.description
                 instructor = this@with.instructor
                 fee = this@with.fee
+                status = this@with.status
                 startDate = this@with.startDate
                 endDate = this@with.endDate
                 monStartTime = this@with.monStartTime

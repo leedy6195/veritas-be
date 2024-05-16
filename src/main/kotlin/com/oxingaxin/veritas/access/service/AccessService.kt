@@ -13,6 +13,7 @@ import com.oxingaxin.veritas.device.repository.KioskRepository
 import com.oxingaxin.veritas.facility.domain.entity.SeatStatus
 import com.oxingaxin.veritas.facility.repository.ReadingRoomRepository
 import com.oxingaxin.veritas.facility.repository.SeatRepository
+import com.oxingaxin.veritas.lecture.domain.entity.AttendanceStatus
 import com.oxingaxin.veritas.student.repository.StudentRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -177,6 +178,10 @@ class AccessService(
     /**
      * lectureRoom
      **/
+
+    fun getAttendanceStatus(studentId: Long, startDateTime: LocalDateTime, endDateTime: LocalDateTime): AttendanceStatus {
+        return lectureRoomAccessRepository.getAttendanceStatus(studentId, startDateTime, endDateTime)
+    }
 
     fun accessLectureRoom(lectureRoomAccessRequest: LectureRoomAccessRequest)
             : LectureRoomAccessResponse {

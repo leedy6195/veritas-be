@@ -20,6 +20,9 @@ class Lecture(
 
         var fee: Long?,
 
+        @Enumerated(EnumType.STRING)
+        var status: LectureStatus,
+
         @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
         var schedules: MutableList<Schedule> = mutableListOf(),
 
@@ -54,6 +57,8 @@ class Lecture(
     fun prePersist() {
         createdAt = LocalDateTime.now()
     }
+}
 
-
+enum class LectureStatus {
+    OPEN, CLOSED
 }

@@ -1,6 +1,7 @@
 package com.oxingaxin.veritas.lecture.domain.dto
 
 import com.oxingaxin.veritas.lecture.domain.entity.Lecture
+import com.oxingaxin.veritas.lecture.domain.entity.LectureStatus
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -9,6 +10,7 @@ data class LectureRequest(
         val description: String?,
         val instructor: String,
         val fee: Long?,
+        val status: LectureStatus,
         val startDate: LocalDate,
         val endDate: LocalDate,
         val monStartTime: LocalTime?,
@@ -32,6 +34,7 @@ data class LectureRequest(
             description = description,
             instructor = instructor,
             fee = fee,
+            status = status,
             startDate = startDate,
             endDate = endDate,
             monStartTime = monStartTime,
