@@ -1,7 +1,6 @@
 package com.oxingaxin.veritas.student.domain.entity
 
 import jakarta.persistence.*
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,6 +28,9 @@ class Student(
         @Enumerated(EnumType.STRING)
         var courseType: CourseType,
 
+        @Enumerated(EnumType.STRING)
+        var gradeType: GradeType,
+
         var createdAt: LocalDateTime? = null,
 ) {
 
@@ -41,4 +43,8 @@ class Student(
 
 enum class CourseType {
     WEEKDAY, WEEKEND, GENERAL
+}
+
+enum class GradeType {
+    GRADE1, GRADE2, GRADE3, GRADUATE
 }

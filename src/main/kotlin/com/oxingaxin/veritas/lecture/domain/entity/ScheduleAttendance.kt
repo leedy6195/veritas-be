@@ -17,6 +17,7 @@ class ScheduleAttendance(
         @JoinColumn(name = "student_id")
         var student: Student,
 
+        @Enumerated(EnumType.STRING)
         var status: AttendanceStatus
 ) {
 

@@ -31,6 +31,7 @@ class StudentService(
             tel = student.tel,
             parentTel = student.parentTel,
             courseType = student.courseType,
+            gradeType = student.gradeType,
             createdAt = student.createdAt!!)
     }
 
@@ -50,6 +51,7 @@ class StudentService(
                 tel = it.tel,
                 parentTel = it.parentTel,
                 courseType = it.courseType,
+                gradeType = it.gradeType,
                 createdAt = it.createdAt!!)
         }
     }
@@ -63,6 +65,7 @@ class StudentService(
             tel = studentCreateRequest.tel,
             parentTel = studentCreateRequest.parentTel,
             courseType = studentCreateRequest.courseType,
+            gradeType = studentCreateRequest.gradeType,
         )
 
         studentRepository.save(student)
@@ -79,6 +82,7 @@ class StudentService(
         student.tel = studentUpdateRequest.tel
         student.parentTel = studentUpdateRequest.parentTel
         student.courseType = studentUpdateRequest.courseType
+        student.gradeType = studentUpdateRequest.gradeType
     }
 
     fun deleteStudent(studentId: Long) {
