@@ -1,6 +1,7 @@
 package com.oxingaxin.veritas.lecture.controller
 
 import com.oxingaxin.veritas.common.BaseResponse
+import com.oxingaxin.veritas.common.argumentresolver.LoggedIn
 import com.oxingaxin.veritas.lecture.domain.dto.EnrollmentRequest
 import com.oxingaxin.veritas.lecture.domain.entity.Enrollment
 import com.oxingaxin.veritas.lecture.service.EnrollmentService
@@ -28,6 +29,14 @@ class EnrollmentController(
     ): BaseResponse<Unit> {
         enrollmentService.enroll(enrollmentRequest)
         return BaseResponse.ok()
+    }
+
+    @GetMapping("/my")
+    fun getMyEnrollments(
+            @LoggedIn studentId: Long
+    ): BaseResponse<List<Enrollment>> {
+        val enrollments = enrollmentService.findEnrollmentsByStudentId(studentId)
+        return BaseResponse.ok(enrollments)
     }
 
 }

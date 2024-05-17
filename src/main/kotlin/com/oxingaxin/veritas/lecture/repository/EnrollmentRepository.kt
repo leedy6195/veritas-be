@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface EnrollmentRepository : JpaRepository<Enrollment, Long> {
     fun countByLectureId(lectureId: Long): Long
-
+    fun findByStudentId(studentId: Long): List<Enrollment>
     fun findByLectureId(lectureId: Long): List<Enrollment>
 }
