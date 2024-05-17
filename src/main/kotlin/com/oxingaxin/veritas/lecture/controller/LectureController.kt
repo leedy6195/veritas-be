@@ -95,7 +95,7 @@ class LectureController(
         return BaseResponse.ok(scheduleAttendances)
     }
 
-    @GetMapping("/{lectureId}/enrollments}")
+    @GetMapping("/{lectureId}/enrollments")
     fun getEnrollments(
             @PathVariable lectureId: Long
     ): BaseResponse<List<Enrollment>> {
