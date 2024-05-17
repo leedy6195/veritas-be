@@ -36,5 +36,7 @@ class EnrollmentService(
 
     }
 
+    fun findEnrollmentsByLectureId(lectureId: Long) = enrollmentRepository.findByLectureId(lectureId)
+
     fun findEnrollments() = enrollmentRepository.findAll()
 }
