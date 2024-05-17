@@ -54,3 +54,27 @@ data class LectureRequest(
         )
     }
 }
+
+
+data class LectureResponse(
+        val id: Long,
+        val name: String,
+        val description: String?,
+        val instructor: String,
+        val fee: Long?,
+        val status: LectureStatus,
+        val startDate: LocalDate,
+        val enrolledStudents: Long,
+) {
+    constructor(lecture: Lecture, enrolledStudents: Long) : this(
+        id = lecture.id!!,
+        name = lecture.name,
+        description = lecture.description,
+        instructor = lecture.instructor,
+        fee = lecture.fee,
+        status = lecture.status,
+        startDate = lecture.startDate,
+        enrolledStudents = enrolledStudents,
+    )
+}
+

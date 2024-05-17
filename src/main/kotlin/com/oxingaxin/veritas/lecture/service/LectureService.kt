@@ -2,9 +2,11 @@ package com.oxingaxin.veritas.lecture.service
 
 import com.oxingaxin.veritas.common.exception.NotFoundException
 import com.oxingaxin.veritas.lecture.domain.dto.LectureRequest
+import com.oxingaxin.veritas.lecture.domain.dto.LectureResponse
 import com.oxingaxin.veritas.lecture.domain.dto.ScheduleRequest
 import com.oxingaxin.veritas.lecture.domain.entity.Lecture
 import com.oxingaxin.veritas.lecture.domain.entity.Schedule
+import com.oxingaxin.veritas.lecture.repository.EnrollmentRepository
 import com.oxingaxin.veritas.lecture.repository.LectureRepository
 import com.oxingaxin.veritas.lecture.repository.ScheduleRepository
 import org.springframework.stereotype.Service
@@ -15,7 +17,8 @@ import java.time.DayOfWeek
 @Transactional
 class LectureService(
         private val lectureRepository: LectureRepository,
-        private val scheduleRepository: ScheduleRepository
+        private val scheduleRepository: ScheduleRepository,
+        private val enrollmentRepository: EnrollmentRepository
 ) {
 
     fun findSchedules(lectureId: Long): List<Schedule> {
@@ -24,15 +27,24 @@ class LectureService(
     }
 
     fun findLecture(lectureId: Long): Lecture {
-        val lecture =  lectureRepository.findById(lectureId)
+        val lecture = lectureRepository.findById(lectureId)
             .orElseThrow { NotFoundException("강의") }
 
-        lecture.schedules = lecture.schedules.sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime }).toMutableList()
+        lecture.schedules =
+            lecture.schedules.sortedWith(compareBy<Schedule> { it.date }.thenBy { it.startTime }).toMutableList()
         return lecture
 
     }
 
-    fun findLectures(): List<Lecture> = lectureRepository.findAll()
+    fun findLectures(): List<LectureResponse> {
+        return lectureRepository.findAll().map { lecture ->
+            LectureResponse(
+                lecture = lecture,
+                enrolledStudents = enrollmentRepository.countByLectureId(lecture.id!!)
+            )
+        }
+    }
+
     fun saveLecture(lectureRequest: LectureRequest) {
         val lecture = lectureRequest.toEntity()
         lectureRepository.save(lecture)

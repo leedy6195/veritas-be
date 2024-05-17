@@ -21,6 +21,10 @@ class ScheduleAttendanceService(
 ) {
     fun scheduleAttendanceExists(scheduleId: Long, studentId: Long) = scheduleAttendanceRepository.existsByStudentIdAndScheduleId(studentId, scheduleId)
 
+    fun findScheduleAttendances(lectureId: Long): List<ScheduleAttendance> {
+        return scheduleAttendanceRepository.findByScheduleLectureId(lectureId)
+    }
+
     fun recordScheduleAttendance(studentId: Long, scheduleId: Long) {
         if (scheduleAttendanceExists(studentId, scheduleId)) {
             return
