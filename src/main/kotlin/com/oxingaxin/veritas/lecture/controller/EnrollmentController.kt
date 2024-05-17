@@ -33,8 +33,13 @@ class EnrollmentController(
 
     @GetMapping("/my")
     fun getMyEnrollments(
-            @LoggedIn studentId: Long
+            @LoggedIn studentId: Long?
     ): BaseResponse<List<Enrollment>> {
+
+        if (studentId == null) {
+            return BaseResponse.ok(null)
+        }
+
         val enrollments = enrollmentService.findEnrollmentsByStudentId(studentId)
         return BaseResponse.ok(enrollments)
     }
