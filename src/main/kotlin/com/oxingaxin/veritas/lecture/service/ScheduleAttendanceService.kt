@@ -19,7 +19,7 @@ class ScheduleAttendanceService(
         private val scheduleRepository: ScheduleRepository,
     private val studentRepository: StudentRepository
 ) {
-    fun scheduleAttendanceExists(scheduleId: Long, studentId: Long) = scheduleAttendanceRepository.existsByStudentIdAndScheduleId(studentId, scheduleId)
+    fun scheduleAttendanceExists(studentId: Long, scheduleId: Long) = scheduleAttendanceRepository.existsByStudentIdAndScheduleId(studentId, scheduleId)
 
     fun findScheduleAttendances(lectureId: Long): List<ScheduleAttendance> {
         return scheduleAttendanceRepository.findByScheduleLectureId(lectureId)
