@@ -87,6 +87,23 @@ class LectureController(
         return BaseResponse.ok()
     }
 
+    @PutMapping("/{lectureId}/schedules/{scheduleId}")
+    fun updateSchedule(
+            @PathVariable scheduleId: Long,
+            @RequestBody scheduleRequest: ScheduleRequest
+    ): BaseResponse<Unit> {
+        lectureService.updateSchedule(scheduleId, scheduleRequest)
+        return BaseResponse.ok()
+    }
+
+    @DeleteMapping("/{lectureId}/schedules/{scheduleId}")
+    fun deleteSchedule(
+            @PathVariable scheduleId: Long
+    ): BaseResponse<Unit> {
+        lectureService.deleteSchedule(scheduleId)
+        return BaseResponse.ok()
+    }
+
     @GetMapping("/{lectureId}/scheduleAttendances")
     fun getScheduleAttendances(
             @PathVariable lectureId: Long

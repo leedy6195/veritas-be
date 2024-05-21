@@ -139,4 +139,21 @@ class LectureService(
 
         scheduleRepository.save(schedule)
     }
+
+    fun updateSchedule(scheduleId: Long, scheduleRequest: ScheduleRequest) {
+        val schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow { NotFoundException("강의 스케줄") }
+
+        schedule.date = scheduleRequest.date
+        schedule.startTime = scheduleRequest.startTime
+        schedule.endTime = scheduleRequest.endTime
+        schedule.description = scheduleRequest.description
+    }
+
+    fun deleteSchedule(scheduleId: Long) {
+        val schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow { NotFoundException("강의 스케줄") }
+
+        scheduleRepository.delete(schedule)
+    }
 }
