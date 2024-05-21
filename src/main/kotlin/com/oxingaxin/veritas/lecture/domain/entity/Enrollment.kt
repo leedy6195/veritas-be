@@ -22,10 +22,10 @@ class Enrollment(
         @OnDelete(action = OnDeleteAction.CASCADE)
         val student: Student,
 
-        val paymentAmount: Long?,
+        var paymentAmount: Long?,
 
         @Enumerated(EnumType.STRING)
-        val paymentMethod: PaymentMethod,
+        var paymentMethod: PaymentMethod,
 
         var createdAt: LocalDateTime? = null,
 

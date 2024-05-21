@@ -32,8 +32,23 @@ class EnrollmentService(
                 paymentMethod = enrollmentRequest.paymentMethod
             )
         )
+    }
 
+    fun updateEnrollment(enrollmentId: Long, enrollmentRequest: EnrollmentRequest) {
+        val enrollment = enrollmentRepository.findById(enrollmentId)
+            .orElseThrow { NotFoundException("수강신청") }
 
+        enrollment.paymentAmount = enrollmentRequest.paymentAmount
+        enrollment.paymentMethod = enrollmentRequest.paymentMethod
+
+        enrollmentRepository.save(enrollment)
+    }
+
+    fun deleteEnrollment(enrollmentId: Long) {
+        val enrollment = enrollmentRepository.findById(enrollmentId)
+            .orElseThrow { NotFoundException("수강신청") }
+
+        enrollmentRepository.delete(enrollment)
     }
 
     fun findEnrollmentsByStudentId(studentId: Long) = enrollmentRepository.findByStudentId(studentId)
