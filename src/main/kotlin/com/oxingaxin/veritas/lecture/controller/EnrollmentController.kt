@@ -51,9 +51,6 @@ class EnrollmentController(
         return BaseResponse.ok()
     }
 
-
-    @DeleteMapping
-
     @GetMapping("/my")
     fun getMyEnrollments(
             @LoggedIn studentId: Long?
