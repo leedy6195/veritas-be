@@ -25,6 +25,7 @@ class ReadingRoomAccess(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "seat_id")
+        @OnDelete(action = OnDeleteAction.CASCADE)
         val seat: Seat,
 
         var enterTime: LocalDateTime? = null,
