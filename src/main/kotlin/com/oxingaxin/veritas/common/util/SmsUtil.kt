@@ -31,7 +31,7 @@ class SmsUtil {
             "type" to "SMS",
             "contentType" to "COMM",
             "from" to "025645557",
-            "content" to smsRequest.message,
+            "content" to "TEST",
             "messages" to listOf(
                 mapOf(
                     "to" to smsRequest.to
