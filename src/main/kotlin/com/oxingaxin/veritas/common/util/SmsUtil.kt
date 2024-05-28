@@ -26,6 +26,7 @@ class SmsUtil {
             "x-ncp-iam-access-key" to SMS_API_KEY,
             "x-ncp-apigw-signature-v2" to signature
         )
+
         val body = mapOf(
             "type" to "SMS",
             "contentType" to "COMM",
@@ -37,6 +38,8 @@ class SmsUtil {
                 )
             )
         )
+        println(headers)
+        println(body)
         restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
     }
 
