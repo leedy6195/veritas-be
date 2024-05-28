@@ -22,6 +22,15 @@ interface LectureRoomAccessRepository : JpaRepository<LectureRoomAccess, Long> {
             studentId: Long
     ): Optional<LectureRoomAccess>
 
+    @Query("SELECT lra FROM LectureRoomAccess lra " +
+            "WHERE lra.student.id = :studentId " +
+            "AND FUNCTION('DATE', lra.enterTime) = FUNCTION('DATE', CURRENT_TIMESTAMP) " +
+            "ORDER BY lra.enterTime DESC " +
+            "LIMIT 1")
+    fun findTodayAnyEnter(
+            studentId: Long
+    ): Optional<LectureRoomAccess>
+
     @Query(
         "SELECT CASE " +
                 "WHEN COUNT(lra) = 0 THEN 'ABSENT' " +

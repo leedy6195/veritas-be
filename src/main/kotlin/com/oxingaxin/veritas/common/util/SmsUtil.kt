@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -43,22 +45,27 @@ class SmsUtil {
             "type" to "SMS",
             "contentType" to "COMM",
             "from" to "025645557",
-            "content" to "TEST",
+            "content" to smsRequest.message,
             "messages" to listOf(
                 mapOf(
                     "to" to smsRequest.to
                 )
             )
         )
-        println(headers)
-        println(body)
         restTemplate.exchange(SMS_API_URL, HttpMethod.POST, HttpEntity(body, headers), String::class.java)
         //restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
     }
 
     fun convertMessage(memberName: String): String {
+        val currentDateTime = LocalDateTime.now()
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+        val formattedDate = currentDateTime.format(dateFormatter)
+        val formattedTime = currentDateTime.format(timeFormatter)
+
         return "안녕하세요 베리타스S 학원 등원 안내입니다.\n" +
-                "YYYY년 MM월 DD일 $memberName 학생이 HH:MM에 등원하여 학부모님께 알려드립니다.\n" +
+                "$formattedDate $memberName 학생이 ${formattedTime}에 등원하여 학부모님께 알려드립니다.\n" +
                 "문의전화 : 02-564-5557\n" +
                 "감사합니다."
     }
