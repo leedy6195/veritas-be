@@ -7,6 +7,8 @@ import com.oxingaxin.veritas.access.repository.LectureRoomAccessRepository
 import com.oxingaxin.veritas.access.repository.ReadingRoomAccessRepository
 import com.oxingaxin.veritas.common.exception.NotFoundException
 import com.oxingaxin.veritas.common.util.ReceiverUtil
+import com.oxingaxin.veritas.common.util.SmsRequest
+import com.oxingaxin.veritas.common.util.SmsUtil
 import com.oxingaxin.veritas.device.domain.entity.AccessType
 import com.oxingaxin.veritas.device.repository.EntryDeviceRepository
 import com.oxingaxin.veritas.device.repository.KioskRepository
@@ -32,7 +34,9 @@ class AccessService(
         private val kioskRepository: KioskRepository,
         private val deviceRepository: EntryDeviceRepository,
         private val lectureRoomAccessRepository: LectureRoomAccessRepository,
-        private val receiverUtil: ReceiverUtil
+        private val receiverUtil: ReceiverUtil,
+        private val smsUtil: SmsUtil
+
 ) {
     fun saveReadingRoomAccess(readingRoomAccessCreateRequest: ReadingRoomAccessCreateRequest)
             : ReadingRoomAccessCreateResponse {
@@ -197,6 +201,10 @@ class AccessService(
                 throw RuntimeException("퇴실처리를 하지 않은 입실이 존재합니다. \n퇴실처리 먼저 해주세요.")
             }
             val entry = lectureRoomAccessRepository.save(lectureRoomAccess)
+
+            smsUtil.sendSms(
+                SmsRequest(smsUtil.convertTel(student.parentTel), smsUtil.convertMessage(student.name)))
+
             return LectureRoomAccessResponse(student.name, entry.enterTime!!)
         } else {
             val todayLectureRoomAccess = lectureRoomAccessRepository.findTodayEnter(lectureRoom.id!!, student.id!!)

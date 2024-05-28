@@ -1,0 +1,83 @@
+package com.oxingaxin.veritas.common.util
+
+import org.apache.tomcat.util.codec.binary.Base64
+import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
+@Component
+class SmsUtil {
+    val restTemplate = RestTemplate()
+
+    companion object {
+        const val SMS_API_URL = "https://sens.apigw.ntruss.com/sms/v2/services/ncp:sms:kr:331793620405:veritas-s/messages"
+        const val SMS_API_KEY = "jbxHiVXxi4zalY7cWyzK"
+        const val SMS_API_SECRET = "Lt0LVogXnP3XdjYQzcAFravH4Sug6mORxksbV4OW"
+    }
+
+    fun sendSms(smsRequest: SmsRequest) {
+        val timestamp = System.currentTimeMillis().toString()
+        val signature = makeSignature(timestamp)
+
+        val headers = mapOf(
+            "Content-Type" to "application/json; charset=utf-8",
+            "x-ncp-apigw-timestamp" to timestamp,
+            "x-ncp-iam-access-key" to SMS_API_KEY,
+            "x-ncp-apigw-signature-v2" to signature
+        )
+        val body = mapOf(
+            "type" to "SMS",
+            "contentType" to "COMM",
+            "from" to "025645557",
+            "content" to smsRequest.message,
+            "messages" to listOf(
+                mapOf(
+                    "to" to smsRequest.to
+                )
+            )
+        )
+        restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
+    }
+
+    fun convertMessage(memberName: String): String {
+        return "안녕하세요 베리타스S 학원 등원 안내입니다.\n" +
+                "YYYY년 MM월 DD일 $memberName 학생이 HH:MM에 등원하여 학부모님께 알려드립니다.\n" +
+                "문의전화 : 02-564-5557\n" +
+                "감사합니다."
+    }
+
+    fun convertTel(tel: String): String {
+        return tel.replace("-", "")
+    }
+
+    fun makeSignature(timestamp: String): String {
+        val space = " "
+        val newLine = "\n"
+        val method = "POST"
+
+        val message = StringBuilder()
+            .append(method)
+            .append(space)
+            .append(SMS_API_URL)
+            .append(newLine)
+            .append(timestamp)
+            .append(newLine)
+            .append(SMS_API_KEY)
+            .toString()
+
+        val signingKey = SecretKeySpec(SMS_API_SECRET.toByteArray(Charsets.UTF_8), "HmacSHA256")
+        val hmacSha256 = Mac.getInstance("HmacSHA256")
+
+        hmacSha256.init(signingKey)
+        val rawHmac = hmacSha256.doFinal(message.toByteArray(Charsets.UTF_8))
+        val encodeBase64String = Base64.encodeBase64String(rawHmac)
+
+        return encodeBase64String
+    }
+}
+
+data class SmsRequest(
+    val to: String,
+    val message: String
+)
