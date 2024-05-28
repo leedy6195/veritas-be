@@ -1,7 +1,11 @@
 package com.oxingaxin.veritas.common.util
 
 import org.apache.tomcat.util.codec.binary.Base64
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -20,12 +24,20 @@ class SmsUtil {
         val timestamp = System.currentTimeMillis().toString()
         val signature = makeSignature(timestamp)
 
+        /*
         val headers = mapOf(
             "Content-Type" to "application/json; charset=utf-8",
             "x-ncp-apigw-timestamp" to timestamp,
             "x-ncp-iam-access-key" to SMS_API_KEY,
             "x-ncp-apigw-signature-v2" to signature
         )
+
+         */
+        val headers: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headers.add("Content-Type", "application/json; charset=utf-8")
+        headers.add("x-ncp-apigw-timestamp", timestamp)
+        headers.add("x-ncp-iam-access-key", SMS_API_KEY)
+        headers.add("x-ncp-apigw-signature-v2", signature)
 
         val body = mapOf(
             "type" to "SMS",
@@ -40,7 +52,8 @@ class SmsUtil {
         )
         println(headers)
         println(body)
-        restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
+        restTemplate.exchange(SMS_API_URL, HttpMethod.POST, HttpEntity(body, headers), String::class.java)
+        //restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
     }
 
     fun convertMessage(memberName: String): String {
