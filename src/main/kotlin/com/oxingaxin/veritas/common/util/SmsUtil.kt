@@ -55,11 +55,12 @@ class SmsUtil {
         val space = " "
         val newLine = "\n"
         val method = "POST"
+        val url = "/sms/v2/services/ncp:sms:kr:331793620405:veritas-s/messages"
 
         val message = StringBuilder()
             .append(method)
             .append(space)
-            .append(SMS_API_URL)
+            .append(url)
             .append(newLine)
             .append(timestamp)
             .append(newLine)
