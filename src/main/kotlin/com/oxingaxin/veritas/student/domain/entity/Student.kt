@@ -46,5 +46,5 @@ enum class CourseType {
 }
 
 enum class GradeType {
-    GRADE1, GRADE2, GRADE3, GRADUATE
+    MIDDLE1, MIDDLE2, MIDDLE3, HIGH1, HIGH2, HIGH3, GRADUATE
 }
