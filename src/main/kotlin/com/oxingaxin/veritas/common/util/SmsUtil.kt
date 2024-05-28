@@ -64,10 +64,10 @@ class SmsUtil {
         val formattedDate = currentDateTime.format(dateFormatter)
         val formattedTime = currentDateTime.format(timeFormatter)
 
-        return "안녕하세요 베리타스S 학원 등원 안내입니다.\n" +
-                "$formattedDate $memberName 학생이 ${formattedTime}에 등원하여 학부모님께 알려드립니다.\n" +
-                "문의전화 : 02-564-5557\n" +
-                "감사합니다."
+        return "[베리타스S 학원 등원 알림]\n" +
+                "$formattedDate $formattedTime $memberName 학생 등원\n" +
+                "문의전화 : 02-564-5557"
+
     }
 
     fun convertTel(tel: String): String {
