@@ -58,15 +58,15 @@ class SmsUtil {
 
     fun convertMessage(memberName: String): String {
         val currentDateTime = LocalDateTime.now()
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        val dateFormatter = DateTimeFormatter.ofPattern("MM월 dd일")
         val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
         val formattedDate = currentDateTime.format(dateFormatter)
         val formattedTime = currentDateTime.format(timeFormatter)
 
-        return "[베리타스S 학원 등원 알림]\n" +
-                "$formattedDate $formattedTime $memberName 학생 등원\n" +
-                "문의전화 : 02-564-5557"
+        return "[베리타스S 등원 안내]\n" +
+                "$formattedDate $memberName 학생이 $formattedTime 등원하여 안내드립니다."
+
 
     }
 
