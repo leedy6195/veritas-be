@@ -28,7 +28,8 @@ class OAuthController(
         val optionalStudent = studentService.findByEmail(email)
         if (optionalStudent.isPresent) {
             val student = optionalStudent.get()
-            if (student.tel == tel) {
+            val studentTel = student.tel.replace("-", "")
+            if (studentTel == tel) {
                 httpSession.setAttribute(Constants.LOGIN_STUDENT_ID_SESSION_KEY, student.id)
                 return BaseResponse.ok()
             }
@@ -37,7 +38,7 @@ class OAuthController(
         return BaseResponse.builder<Void>()
             .success(false)
             .status(HttpStatus.NOT_ACCEPTABLE.value())
-            .message("이메일 또는 비밀번호가 일치하지 않습니다.")
+            .message("이메일 또는 휴대폰번호가 일치하지 않습니다.")
             .build()
     }
 
