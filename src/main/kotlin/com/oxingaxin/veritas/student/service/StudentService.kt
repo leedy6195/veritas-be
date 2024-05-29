@@ -16,6 +16,9 @@ class StudentService(
         private val studentRepository: StudentRepository
 ) {
 
+    fun findByEmail(email: String): Optional<Student> {
+        return studentRepository.findByEmail(email)
+    }
 
     fun getMyInfo(studentId: Long): StudentResponse {
         val student = studentRepository.findById(studentId)

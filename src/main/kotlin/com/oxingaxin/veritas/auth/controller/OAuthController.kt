@@ -18,6 +18,30 @@ class OAuthController(
         private val httpSession: HttpSession
 ) {
 
+    @PostMapping("/login")
+    fun login(
+            @RequestBody request: LoginRequest
+    ): BaseResponse<Void> {
+        val email = request.email
+        val tel = request.tel
+
+        val optionalStudent = studentService.findByEmail(email)
+        if (optionalStudent.isPresent) {
+            val student = optionalStudent.get()
+            if (student.tel == tel) {
+                httpSession.setAttribute(Constants.LOGIN_STUDENT_ID_SESSION_KEY, student.id)
+                return BaseResponse.ok()
+            }
+        }
+
+        return BaseResponse.builder<Void>()
+            .success(false)
+            .status(HttpStatus.NOT_ACCEPTABLE.value())
+            .message("이메일 또는 비밀번호가 일치하지 않습니다.")
+            .build()
+    }
+
+
 
     @PostMapping("/kakao/token")
     fun getKakaoToken(
@@ -63,6 +87,11 @@ class OAuthController(
 
 
 }
+
+data class LoginRequest(
+        val email: String,
+        val tel: String
+)
 
 data class KakaoTokenRequest(
         val code: String,
