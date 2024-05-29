@@ -65,7 +65,7 @@ class SmsUtil {
         val formattedTime = currentDateTime.format(timeFormatter)
 
         return "[베리타스S 등원 안내]\n" +
-                "$formattedDate $memberName 학생이 $formattedTime 등원하여 안내드립니다."
+                "$formattedDate ${memberName}학생이 $formattedTime 등원하여 안내드립니다."
 
 
     }
