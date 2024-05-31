@@ -206,6 +206,7 @@ class AccessService(
                     SmsRequest(smsUtil.convertTel(student.parentTel), smsUtil.convertMessage(student.name)))
             }
             val entry = lectureRoomAccessRepository.save(lectureRoomAccess)
+            receiverUtil.openLectureRoomDoor(lectureRoom)
 
             return LectureRoomAccessResponse(student.name, entry.enterTime!!)
         } else {
@@ -213,6 +214,7 @@ class AccessService(
                 .orElseThrow { NotFoundException("입실 정보") }
             val now = LocalDateTime.now()
             todayLectureRoomAccess.exitTime = now
+            receiverUtil.openLectureRoomDoor(lectureRoom)
             return LectureRoomAccessResponse(student.name, now)
         }
     }

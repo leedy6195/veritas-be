@@ -1,5 +1,6 @@
 package com.oxingaxin.veritas.common.util
 
+import com.oxingaxin.veritas.facility.domain.entity.LectureRoom
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
@@ -12,6 +13,15 @@ class ReceiverUtil() {
 
     companion object {
         val mutexMap = ConcurrentHashMap<String, Int>()
+    }
+
+    fun openLectureRoomDoor(lectureRoom: LectureRoom) {
+        restTemplate.exchange(
+            "https://blynk.cloud/external/api/update?token=${lectureRoom.receiverToken}&v0=1",
+            HttpMethod.GET,
+            null,
+            String::class.java
+        )
     }
 
     fun openDoor(readingRoom: ReadingRoom) {
