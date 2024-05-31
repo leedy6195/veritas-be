@@ -12,6 +12,8 @@ class LectureRoom(
         @Column(unique = true)
         var name: String,
 
+        var receiverToken: String,
+
         private var createdAt: LocalDateTime? = null
 ) {
     @PrePersist

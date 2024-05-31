@@ -13,7 +13,7 @@ class LectureRoomService(
     private val lectureRoomRepository: LectureRoomRepository
 ) {
     fun createLectureRoom(lectureRoomCreateRequest: LectureRoomCreateRequest) {
-        val lectureRoom = LectureRoom(name = lectureRoomCreateRequest.name)
+        val lectureRoom = LectureRoom(name = lectureRoomCreateRequest.name, receiverToken = lectureRoomCreateRequest.receiverToken)
         lectureRoomRepository.save(lectureRoom)
     }
 
@@ -28,6 +28,7 @@ class LectureRoomService(
     fun updateLectureRoom(id: Long, lectureRoomCreateRequest: LectureRoomCreateRequest) {
         val lectureRoom = lectureRoomRepository.findById(id).get()
         lectureRoom.name = lectureRoomCreateRequest.name
+        lectureRoom.receiverToken = lectureRoomCreateRequest.receiverToken
         lectureRoomRepository.save(lectureRoom)
     }
 }
