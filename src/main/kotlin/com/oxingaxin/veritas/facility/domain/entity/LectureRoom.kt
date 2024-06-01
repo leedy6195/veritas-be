@@ -12,7 +12,7 @@ class LectureRoom(
         @Column(unique = true)
         var name: String,
 
-        var receiverToken: String,
+        var receiverToken: String? = null,
 
         private var createdAt: LocalDateTime? = null
 ) {
