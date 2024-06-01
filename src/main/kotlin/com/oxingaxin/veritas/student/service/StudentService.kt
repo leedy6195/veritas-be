@@ -43,7 +43,7 @@ class StudentService(
     }
 
     fun findStudents(): List<StudentResponse> {
-        return studentRepository.findAll().map {
+        return studentRepository.findAll().sortedByDescending { it.createdAt }.map {
             StudentResponse(
                 id = it.id!!,
                 serial = it.serial!!,

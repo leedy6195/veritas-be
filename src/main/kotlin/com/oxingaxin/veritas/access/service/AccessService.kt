@@ -201,9 +201,9 @@ class AccessService(
                 throw RuntimeException("퇴실처리를 하지 않은 입실이 존재합니다. \n퇴실처리 먼저 해주세요.")
             }
 
-            if (lectureRoomAccessRepository.findTodayAnyEnter(student.id!!).isEmpty) {
+            if (lectureRoomAccessRepository.findTodayAnyEnter(student.id!!).isEmpty && !student.parentTel.isNullOrEmpty()) {
                 smsUtil.sendSms(
-                    SmsRequest(smsUtil.convertTel(student.parentTel), smsUtil.convertMessage(student.name)))
+                    SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name)))
             }
             val entry = lectureRoomAccessRepository.save(lectureRoomAccess)
             receiverUtil.openLectureRoomDoor(lectureRoom)

@@ -23,7 +23,7 @@ class Student(
 
         var tel: String,
 
-        var parentTel: String,
+        var parentTel: String? = null,
 
         @Enumerated(EnumType.STRING)
         var courseType: CourseType,

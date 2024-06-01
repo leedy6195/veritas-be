@@ -10,7 +10,7 @@ data class StudentCreateRequest(
         val email: String,
         val birthDate: String,
         val tel: String,
-        val parentTel: String,
+        val parentTel: String?,
         val courseType: CourseType,
         val gradeType: GradeType
 )
@@ -23,7 +23,7 @@ data class StudentResponse(
         val email: String,
         val birthDate: String,
         val tel: String,
-        val parentTel: String,
+        val parentTel: String?,
         val courseType: CourseType,
         val gradeType: GradeType,
         val createdAt: LocalDateTime,
@@ -36,7 +36,7 @@ data class StudentUpdateRequest(
         val email: String,
         val birthDate: String,
         val tel: String,
-        val parentTel: String,
+        val parentTel: String?,
         val courseType: CourseType,
         val gradeType: GradeType
 )
