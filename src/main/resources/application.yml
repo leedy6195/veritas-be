@@ -22,7 +22,8 @@ logging:
 server:
   servlet:
     session:
-      timeout: 24h
+      timeout: 72h
       cookie:
         same-site: none
         secure: true
+        max-age: 259200
