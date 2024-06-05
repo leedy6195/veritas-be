@@ -40,10 +40,25 @@ class AccessService(
 ) {
     fun saveReadingRoomAccess(readingRoomAccessCreateRequest: ReadingRoomAccessCreateRequest)
             : ReadingRoomAccessCreateResponse {
-        val student = studentRepository.findBySerial(readingRoomAccessCreateRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+
         val room = readingRoomRepository.findById(readingRoomAccessCreateRequest.roomId)
             .orElseThrow { NotFoundException("독서실정보") }
+
+        GlobalScope.launch {
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
+                receiverUtil.openDoor(room)
+            }
+            delay(10000)
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
+                receiverUtil.closeDoor(room)
+            }
+        }
+
+        val student = studentRepository.findBySerial(readingRoomAccessCreateRequest.serial)
+            .orElseThrow { NotFoundException("회원정보") }
+
         val seat = seatRepository.findById(readingRoomAccessCreateRequest.seatId)
             .orElseThrow { NotFoundException("좌석정보") }
 
@@ -62,20 +77,6 @@ class AccessService(
                 }
             }
         }
-
-
-        GlobalScope.launch {
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
-                receiverUtil.openDoor(room)
-            }
-            delay(10000)
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
-                receiverUtil.closeDoor(room)
-            }
-        }
-
 
         seat.status = SeatStatus.OCCUPIED
 
@@ -137,8 +138,6 @@ class AccessService(
 
     fun exitReadingRoom(readingRoomExitRequest: ReadingRoomExitRequest)
             : ReadingRoomExitResponse {
-        val student = studentRepository.findBySerial(readingRoomExitRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
 
         val exitDevice = deviceRepository.findById(readingRoomExitRequest.deviceId)
             .orElseThrow { NotFoundException("디바이스정보") }
@@ -146,23 +145,25 @@ class AccessService(
             .orElseThrow { NotFoundException("키오스크정보") }
         val room = readingRoomRepository.findByKiosksId(kiosk.id!!)
             .orElseThrow { NotFoundException("독서실정보") }
+
+        GlobalScope.launch {
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
+                receiverUtil.openDoor(room)
+            }
+            delay(10000)
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
+                receiverUtil.closeDoor(room)
+            }
+        }
+
+        val student = studentRepository.findBySerial(readingRoomExitRequest.serial)
+            .orElseThrow { NotFoundException("회원정보") }
+
         val readingRoomAccess = readingRoomAccessRepository.findTodayEnter(room.id!!, student.id!!)
 
         if (readingRoomAccess.isPresent) {
-
-            GlobalScope.launch {
-                ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
-                if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
-                    receiverUtil.openDoor(room)
-                }
-                delay(10000)
-                ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
-                if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
-                    receiverUtil.closeDoor(room)
-                }
-            }
-
-
             val now = LocalDateTime.now()
             readingRoomAccess.get().exitTime = now
             return ReadingRoomExitResponse(student.name, now)
@@ -190,10 +191,15 @@ class AccessService(
 
     fun accessLectureRoom(lectureRoomAccessRequest: LectureRoomAccessRequest)
             : LectureRoomAccessResponse {
-        val student = studentRepository.findBySerial(lectureRoomAccessRequest.serial)
-            .orElseThrow { NotFoundException("회원정보") }
+
         val lectureRoom = deviceRepository.findById(lectureRoomAccessRequest.deviceId)
             .orElseThrow { throw NotFoundException("디바이스정보") }.lectureRoom!!
+        if (!lectureRoom.receiverToken.isNullOrEmpty()) {
+            receiverUtil.openLectureRoomDoor(lectureRoom)
+        }
+
+        val student = studentRepository.findBySerial(lectureRoomAccessRequest.serial)
+            .orElseThrow { NotFoundException("회원정보") }
 
         if (lectureRoomAccessRequest.accessType == AccessType.IN) {
             val lectureRoomAccess = LectureRoomAccess(student = student, lectureRoom = lectureRoom)
@@ -206,9 +212,7 @@ class AccessService(
                     SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name)))
             }
             val entry = lectureRoomAccessRepository.save(lectureRoomAccess)
-            if (!lectureRoom.receiverToken.isNullOrEmpty()) {
-                receiverUtil.openLectureRoomDoor(lectureRoom)
-            }
+
 
             return LectureRoomAccessResponse(student.name, entry.enterTime!!)
         } else {
@@ -216,9 +220,11 @@ class AccessService(
                 .orElseThrow { NotFoundException("입실 정보") }
             val now = LocalDateTime.now()
             todayLectureRoomAccess.exitTime = now
+            /*
             if (!lectureRoom.receiverToken.isNullOrEmpty()) {
                 receiverUtil.openLectureRoomDoor(lectureRoom)
             }
+            */
             return LectureRoomAccessResponse(student.name, now)
         }
     }
