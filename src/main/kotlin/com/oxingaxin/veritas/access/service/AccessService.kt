@@ -12,6 +12,7 @@ import com.oxingaxin.veritas.common.util.SmsUtil
 import com.oxingaxin.veritas.device.domain.entity.AccessType
 import com.oxingaxin.veritas.device.repository.EntryDeviceRepository
 import com.oxingaxin.veritas.device.repository.KioskRepository
+import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
 import com.oxingaxin.veritas.facility.domain.entity.SeatStatus
 import com.oxingaxin.veritas.facility.repository.ReadingRoomRepository
 import com.oxingaxin.veritas.facility.repository.SeatRepository
@@ -44,17 +45,7 @@ class AccessService(
         val room = readingRoomRepository.findById(readingRoomAccessCreateRequest.roomId)
             .orElseThrow { NotFoundException("독서실정보") }
 
-        GlobalScope.launch {
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
-                receiverUtil.openDoor(room)
-            }
-            delay(10000)
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
-                receiverUtil.closeDoor(room)
-            }
-        }
+        openAndCloseDoor(room)
 
         val student = studentRepository.findBySerial(readingRoomAccessCreateRequest.serial)
             .orElseThrow { NotFoundException("회원정보") }
@@ -125,14 +116,17 @@ class AccessService(
 
         if (readingRoomAccess.isPresent) {
             if (readingRoomAccess.get().exitTime == null) {
+                openAndCloseDoor(readingRoomAccess.get().readingRoom)
                 throw RuntimeException("퇴실처리를 하지 않은 입실이 존재합니다. \n퇴실처리 먼저 해주세요.")
             }
         }
 
-        return if (readingRoomAccess.isPresent) {
-            ReadingRoomAccessCheckResponse(readingRoomAccess.get().seat.id!!)
+         if (readingRoomAccess.isPresent) {
+             return ReadingRoomAccessCheckResponse(readingRoomAccess.get().seat.id!!)
         } else {
-            null
+            openAndCloseDoor(readingRoomRepository.findById(readingRoomAccessCheckRequest.roomId)
+                .orElseThrow { NotFoundException("독서실정보") })
+            return null
         }
     }
 
@@ -146,17 +140,7 @@ class AccessService(
         val room = readingRoomRepository.findByKiosksId(kiosk.id!!)
             .orElseThrow { NotFoundException("독서실정보") }
 
-        GlobalScope.launch {
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
-                receiverUtil.openDoor(room)
-            }
-            delay(10000)
-            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
-            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
-                receiverUtil.closeDoor(room)
-            }
-        }
+        openAndCloseDoor(room)
 
         val student = studentRepository.findBySerial(readingRoomExitRequest.serial)
             .orElseThrow { NotFoundException("회원정보") }
@@ -170,6 +154,20 @@ class AccessService(
 
         } else {
             throw NotFoundException("입실 정보")
+        }
+    }
+
+    fun openAndCloseDoor(room: ReadingRoom) {
+        GlobalScope.launch {
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) + 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 1) {
+                receiverUtil.openDoor(room)
+            }
+            delay(10000)
+            ReceiverUtil.mutexMap[room.receiverToken] = ReceiverUtil.mutexMap.getOrDefault(room.receiverToken, 0) - 1
+            if (ReceiverUtil.mutexMap[room.receiverToken] == 0) {
+                receiverUtil.closeDoor(room)
+            }
         }
     }
 
