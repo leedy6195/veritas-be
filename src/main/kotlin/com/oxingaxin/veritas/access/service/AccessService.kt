@@ -124,8 +124,10 @@ class AccessService(
          if (readingRoomAccess.isPresent) {
              return ReadingRoomAccessCheckResponse(readingRoomAccess.get().seat.id!!)
         } else {
+            /*
             openAndCloseDoor(readingRoomRepository.findById(readingRoomAccessCheckRequest.roomId)
                 .orElseThrow { NotFoundException("독서실정보") })
+             */
             return null
         }
     }
