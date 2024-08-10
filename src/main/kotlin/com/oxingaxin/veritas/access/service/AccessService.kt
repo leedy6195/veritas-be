@@ -21,6 +21,7 @@ import com.oxingaxin.veritas.student.repository.StudentRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -39,6 +40,11 @@ class AccessService(
         private val smsUtil: SmsUtil
 
 ) {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(AccessService::class.java)
+    }
+
     fun saveReadingRoomAccess(readingRoomAccessCreateRequest: ReadingRoomAccessCreateRequest)
             : ReadingRoomAccessCreateResponse {
 
@@ -194,12 +200,16 @@ class AccessService(
 
         val lectureRoom = deviceRepository.findById(lectureRoomAccessRequest.deviceId)
             .orElseThrow { throw NotFoundException("디바이스정보") }.lectureRoom!!
-        if (!lectureRoom.receiverToken.isNullOrEmpty()) {
-            receiverUtil.openLectureRoomDoor(lectureRoom)
-        }
 
         val student = studentRepository.findBySerial(lectureRoomAccessRequest.serial)
             .orElseThrow { NotFoundException("회원정보") }
+
+        if (!lectureRoom.receiverToken.isNullOrEmpty()) {
+            receiverUtil.openLectureRoomDoor(lectureRoom)
+            logger.info("${student.name}(${student.serial})님이 ${lectureRoom.name}에 입실하였습니다.")
+        }
+
+
 
         if (lectureRoomAccessRequest.accessType == AccessType.IN) {
             val lectureRoomAccess = LectureRoomAccess(student = student, lectureRoom = lectureRoom)
