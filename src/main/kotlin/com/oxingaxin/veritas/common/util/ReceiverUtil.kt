@@ -2,6 +2,7 @@ package com.oxingaxin.veritas.common.util
 
 import com.oxingaxin.veritas.facility.domain.entity.LectureRoom
 import com.oxingaxin.veritas.facility.domain.entity.ReadingRoom
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
@@ -12,6 +13,7 @@ class ReceiverUtil() {
     val restTemplate = RestTemplate()
 
     companion object {
+        val logger = LoggerFactory.getLogger(ReceiverUtil::class.java)
         val mutexMap = ConcurrentHashMap<String, Int>()
     }
 
@@ -25,12 +27,19 @@ class ReceiverUtil() {
     }
 
     fun openDoor(readingRoom: ReadingRoom) {
-        restTemplate.exchange(
-            "https://blynk.cloud/external/api/update?token=${readingRoom.receiverToken}&v0=0",
-            HttpMethod.GET,
-            null,
-            String::class.java
-        )
+        val url = "https://blynk.cloud/external/api/update?token=${readingRoom.receiverToken}&v0=0"
+        logger.info("openDoor url: $url")
+        try {
+            restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                String::class.java
+            )
+        } catch (e: Exception) {
+            logger.error("openDoor error: ${e.message}")
+        }
+
     }
 
     fun closeDoor(readingRoom: ReadingRoom) {
