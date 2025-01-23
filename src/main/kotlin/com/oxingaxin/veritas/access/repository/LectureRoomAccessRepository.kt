@@ -31,6 +31,16 @@ interface LectureRoomAccessRepository : JpaRepository<LectureRoomAccess, Long> {
             studentId: Long
     ): Optional<LectureRoomAccess>
 
+    @Query("SELECT lra FROM LectureRoomAccess lra " +
+            "WHERE lra.student.id = :studentId " +
+            "AND FUNCTION('DATE', lra.enterTime) = FUNCTION('DATE', CURRENT_TIMESTAMP) " +
+            "AND lra.exitTime IS NOT NULL " +
+            "ORDER BY lra.exitTime DESC " +
+            "LIMIT 1")
+    fun findTodayAnyExit(
+            studentId: Long
+    ): Optional<LectureRoomAccess>
+
     @Query(
         "SELECT CASE " +
                 "WHEN COUNT(lra) = 0 THEN 'ABSENT' " +

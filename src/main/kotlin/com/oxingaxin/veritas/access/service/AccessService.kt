@@ -231,7 +231,7 @@ class AccessService(
             val now = LocalDateTime.now()
             todayLectureRoomAccess.exitTime = now
 
-            if (!student.parentTel.isNullOrEmpty()) {
+            if (lectureRoomAccessRepository.findTodayAnyExit(student.id!!).isEmpty && !student.parentTel.isNullOrEmpty()) {
                 smsUtil.sendSms(
                     SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name, AccessType.OUT)))
             }
