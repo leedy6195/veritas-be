@@ -1,5 +1,6 @@
 package com.oxingaxin.veritas.common.util
 
+import com.oxingaxin.veritas.device.domain.entity.AccessType
 import org.apache.tomcat.util.codec.binary.Base64
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -56,7 +57,7 @@ class SmsUtil {
         //restTemplate.postForObject(SMS_API_URL, body, String::class.java, headers)
     }
 
-    fun convertMessage(memberName: String): String {
+    fun convertMessage(memberName: String, accessType: AccessType): String {
         val currentDateTime = LocalDateTime.now()
         val dateFormatter = DateTimeFormatter.ofPattern("MM월 dd일")
         val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -64,8 +65,11 @@ class SmsUtil {
         val formattedDate = currentDateTime.format(dateFormatter)
         val formattedTime = currentDateTime.format(timeFormatter)
 
-        return "[베리타스S 등원 안내]\n" +
-                "$formattedDate ${memberName}학생이 $formattedTime 등원하여 안내드립니다."
+        return if (accessType == AccessType.IN)
+            "[베리타스S 등원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 등원하여 안내드립니다."
+        else if (accessType == AccessType.OUT)
+            "[베리타스S 하원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 하원하여 안내드립니다."
+        else ""
 
 
     }

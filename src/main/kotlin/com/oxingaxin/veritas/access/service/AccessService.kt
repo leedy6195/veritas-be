@@ -219,7 +219,7 @@ class AccessService(
 
             if (lectureRoomAccessRepository.findTodayAnyEnter(student.id!!).isEmpty && !student.parentTel.isNullOrEmpty()) {
                 smsUtil.sendSms(
-                    SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name)))
+                    SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name, AccessType.IN)))
             }
             val entry = lectureRoomAccessRepository.save(lectureRoomAccess)
 
@@ -230,6 +230,12 @@ class AccessService(
                 .orElseThrow { NotFoundException("입실 정보") }
             val now = LocalDateTime.now()
             todayLectureRoomAccess.exitTime = now
+
+            if (!student.parentTel.isNullOrEmpty()) {
+                smsUtil.sendSms(
+                    SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name, AccessType.OUT)))
+            }
+
             /*
             if (!lectureRoom.receiverToken.isNullOrEmpty()) {
                 receiverUtil.openLectureRoomDoor(lectureRoom)
