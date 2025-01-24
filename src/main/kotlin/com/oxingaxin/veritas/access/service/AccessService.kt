@@ -229,12 +229,12 @@ class AccessService(
             val todayLectureRoomAccess = lectureRoomAccessRepository.findTodayEnter(lectureRoom.id!!, student.id!!)
                 .orElseThrow { NotFoundException("입실 정보") }
             val now = LocalDateTime.now()
-            todayLectureRoomAccess.exitTime = now
 
             if (lectureRoomAccessRepository.findTodayAnyExit(student.id!!).isEmpty && !student.parentTel.isNullOrEmpty()) {
                 smsUtil.sendSms(
                     SmsRequest(smsUtil.convertTel(student.parentTel!!), smsUtil.convertMessage(student.name, AccessType.OUT)))
             }
+            todayLectureRoomAccess.exitTime = now
 
             /*
             if (!lectureRoom.receiverToken.isNullOrEmpty()) {
