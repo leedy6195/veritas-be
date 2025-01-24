@@ -65,13 +65,10 @@ class SmsUtil {
         val formattedDate = currentDateTime.format(dateFormatter)
         val formattedTime = currentDateTime.format(timeFormatter)
 
-        return if (accessType == AccessType.IN)
-            "[베리타스S 등원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 등원하여 안내드립니다."
-        else if (accessType == AccessType.OUT)
-            "[베리타스S 하원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 하원하여 안내드립니다."
-        else ""
-
-
+        return when (accessType) {
+            AccessType.IN -> "[베리타스S 등원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 등원하여 안내드립니다."
+            AccessType.OUT -> "[베리타스S 하원 안내]\n$formattedDate ${memberName}학생이 $formattedTime 하원하여 안내드립니다."
+        }
     }
 
     fun convertTel(tel: String): String {
