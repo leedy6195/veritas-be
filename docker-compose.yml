@@ -7,7 +7,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/veritas
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1313
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:
@@ -46,7 +46,7 @@ services:
     container_name: veritas-db
     image: mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: 1313
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
       MARIADB_DATABASE: veritas
     ports:
       - "3306:3306"
